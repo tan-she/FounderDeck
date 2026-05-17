@@ -48,51 +48,89 @@ export default function Onboarding() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-950 px-4 pt-28 pb-12 text-white">
-      <form onSubmit={handleSubmit} className="mx-auto max-w-3xl rounded-lg border border-white/10 bg-gray-900 p-6">
-        <div className="mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/10">
-            <UserRoundCheck className="h-6 w-6 text-cyan-300" />
+    <main className="min-h-screen bg-[#EAEAEA] px-4 pt-28 pb-12 text-[#111111]">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-3xl rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+        <div className="mb-6 flex items-center gap-3 border-b border-black/5 pb-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FF5C00]/10 shrink-0">
+            <UserRoundCheck className="h-6 w-6 text-[#FF5C00]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Complete your profile</h1>
-            <p className="text-sm text-gray-400">Add the links investors and founders need to trust your profile.</p>
+            <h1 className="text-2xl font-display font-black text-[#111111] uppercase tracking-tight">Complete your profile</h1>
+            <p className="text-sm font-semibold text-gray-500">Add the links investors and founders need to trust your profile.</p>
           </div>
         </div>
 
         <div className="grid gap-5">
           <label>
-            <span className="mb-2 block text-sm font-medium text-gray-300">Display Name</span>
-            <input name="name" value={form.name} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" />
+            <span className="mb-2 block text-sm font-bold text-gray-700">Display Name</span>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
+            />
           </label>
 
           <label>
-            <span className="mb-2 block text-sm font-medium text-gray-300">Bio</span>
-            <textarea name="bio" value={form.bio} onChange={handleChange} rows={5} className="w-full resize-y rounded-md border border-white/10 bg-gray-950 px-4 py-3 leading-7 outline-none transition focus:border-cyan-400" placeholder="Tell people what you build, invest in, or want to collaborate on." />
+            <span className="mb-2 block text-sm font-bold text-gray-700">Bio</span>
+            <textarea
+              name="bio"
+              value={form.bio}
+              onChange={handleChange}
+              rows={5}
+              className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm leading-relaxed"
+              placeholder="Tell people what you build, invest in, or want to collaborate on."
+            />
           </label>
 
           <div className="grid gap-5 md:grid-cols-2">
             <label>
-              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><BriefcaseBusiness className="h-4 w-4" /> LinkedIn URL</span>
-              <input name="linkedin_url" value={form.linkedin_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://linkedin.com/in/username" />
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700">
+                <BriefcaseBusiness className="h-4 w-4 text-[#FF5C00]" /> LinkedIn URL
+              </span>
+              <input
+                name="linkedin_url"
+                value={form.linkedin_url}
+                onChange={handleChange}
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
+                placeholder="https://linkedin.com/in/username"
+              />
             </label>
 
             <label>
-              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><Code2 className="h-4 w-4" /> GitHub URL</span>
-              <input name="github_url" value={form.github_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://github.com/username" />
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700">
+                <Code2 className="h-4 w-4 text-[#FF5C00]" /> GitHub URL
+              </span>
+              <input
+                name="github_url"
+                value={form.github_url}
+                onChange={handleChange}
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
+                placeholder="https://github.com/username"
+              />
             </label>
           </div>
 
           <label>
-            <span className="mb-2 block text-sm font-medium text-gray-300">Avatar URL</span>
-            <input name="avatar_url" value={form.avatar_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://..." />
+            <span className="mb-2 block text-sm font-bold text-gray-700">Avatar URL</span>
+            <input
+              name="avatar_url"
+              value={form.avatar_url}
+              onChange={handleChange}
+              className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
+              placeholder="https://..."
+            />
           </label>
         </div>
 
         <div className="mt-6 flex justify-end">
-          <button type="submit" disabled={isSaving} className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-6 py-3 font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] shadow-md shadow-[#FF5C00]/15 px-6 py-3.5 font-bold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          >
             {isSaving && <Loader2 className="h-5 w-5 animate-spin" />}
-            Save and Continue
+            <span>Save and Continue</span>
           </button>
         </div>
       </form>

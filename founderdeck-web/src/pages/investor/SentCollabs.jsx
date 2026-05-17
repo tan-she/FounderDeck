@@ -35,42 +35,70 @@ export default function SentCollabs() {
     }
   };
 
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'accepted':
+        return 'bg-green-500/10 text-green-600';
+      case 'pending':
+        return 'bg-yellow-500/10 text-yellow-600';
+      case 'withdrawn':
+        return 'bg-red-500/10 text-red-600';
+      default:
+        return 'bg-black/5 text-gray-500';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Sent Collabs</h1>
-        <p className="mt-1 text-gray-400">Track collaboration requests you have sent to founders.</p>
+        <h1 className="text-3xl font-display font-black text-[#111111] uppercase tracking-tight">Sent Collabs</h1>
+        <p className="mt-1 text-sm font-semibold text-gray-500">Track collaboration requests you have sent to founders.</p>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-gray-900">
+      <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
         {isLoading ? (
-          <div className="flex h-52 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-cyan-400" /></div>
+          <div className="flex h-52 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF5C00]" />
+          </div>
         ) : requests.length === 0 ? (
-          <div className="p-10 text-center text-gray-400">No sent collaboration requests yet.</div>
+          <div className="p-10 text-center font-semibold text-gray-400">No sent collaboration requests yet.</div>
         ) : requests.map((request) => (
-          <article key={request.id} className="border-b border-white/10 p-5 last:border-b-0">
+          <article key={request.id} className="border-b border-black/5 p-6 last:border-b-0">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cyan-500/15 font-semibold text-cyan-200">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FF5C00]/10 font-bold text-[#FF5C00]">
                   {initials(request.receiver?.name)}
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-semibold text-white">{request.receiver?.name ?? 'Founder'}</h2>
-                    <span className="rounded-md bg-gray-800 px-2 py-1 text-xs font-semibold uppercase text-gray-300">{request.status}</span>
+                    <h2 className="font-bold text-[#111111]">{request.receiver?.name ?? 'Founder'}</h2>
+                    <span className={`rounded-md px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${getStatusStyle(request.status)}`}>
+                      {request.status}
+                    </span>
                   </div>
-                  <Link to={`/pitches/${request.post?.id}`} className="mt-1 block text-sm text-cyan-300 hover:text-cyan-200">{request.post?.title}</Link>
-                  <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-6 text-gray-300">{request.message}</p>
+                  <Link to={`/pitches/${request.post?.id}`} className="mt-1 block text-sm font-bold text-[#FF5C00] hover:text-[#E65300] transition-colors">
+                    {request.post?.title}
+                  </Link>
+                  <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm font-semibold leading-relaxed text-gray-600">
+                    {request.message}
+                  </p>
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap gap-2">
                 {request.status === 'pending' && (
-                  <button type="button" onClick={() => withdraw(request.id)} className="inline-flex items-center gap-2 rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:bg-gray-700">
-                    <Undo2 className="h-4 w-4" /> Withdraw
+                  <button
+                    type="button"
+                    onClick={() => withdraw(request.id)}
+                    className="inline-flex items-center gap-2 rounded-full bg-red-500/10 hover:bg-red-500/20 px-4 py-2 text-xs font-bold text-red-600 transition-colors"
+                  >
+                    <Undo2 className="h-3.5 w-3.5" /> Withdraw
                   </button>
                 )}
-                <Link to={`/messages?user=${request.receiver?.id}`} className="inline-flex items-center gap-2 rounded-md border border-white/10 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-cyan-400/60">
-                  <MessageSquare className="h-4 w-4" /> Message
+                <Link
+                  to={`/messages?user=${request.receiver?.id}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#F4F4F4] border border-black/5 hover:bg-black/5 hover:border-black/10 px-4 py-2 text-xs font-bold text-gray-700 transition-all"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" /> Message
                 </Link>
               </div>
             </div>

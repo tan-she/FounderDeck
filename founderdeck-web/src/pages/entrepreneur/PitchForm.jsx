@@ -67,14 +67,14 @@ export default function PitchForm() {
       toast.error('Please enter at least a few rough notes or a brief description before enhancing.');
       return;
     }
-    
+
     setIsEnhancing(true);
     try {
       const response = await enhancePitch({
         field: 'description',
         content: currentContent
       });
-      
+
       if (response.data && response.data.enhanced_content) {
         setValue('description', response.data.enhanced_content, { shouldValidate: true, shouldDirty: true });
         toast.success('Pitch enhanced successfully!');
@@ -154,72 +154,72 @@ export default function PitchForm() {
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+      <div className="flex h-64 items-center justify-center bg-[#EAEAEA]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF5C00]" />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-4xl pb-12">
+    <div className="mx-auto max-w-4xl pb-12 text-[#111111]">
       <div className="mb-8 flex items-center gap-4">
         <button
           type="button"
           onClick={() => navigate('/dashboard/entrepreneur/pitches')}
-          className="rounded-lg border border-white/10 bg-gray-900 p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+          className="rounded-full border border-black/5 bg-white p-2.5 text-gray-500 transition hover:bg-black/5 hover:text-[#111111]"
           aria-label="Back to pitches"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-white">{title}</h1>
-          <p className="text-sm text-gray-400">Turn a raw startup thought into a clear investor-ready post.</p>
+          <h1 className="text-3xl font-display font-black text-[#111111] uppercase tracking-tight">{title}</h1>
+          <p className="text-sm font-semibold text-gray-500">Turn a raw startup thought into a clear investor-ready post.</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <section className="rounded-lg border border-white/10 bg-gray-900 p-6">
-          <div className="mb-6 flex items-center gap-2 border-b border-white/10 pb-3">
-            <Rocket className="h-5 w-5 text-cyan-300" />
-            <h2 className="text-lg font-semibold text-white">Pitch Basics</h2>
+        <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+          <div className="mb-6 flex items-center gap-2 border-b border-black/5 pb-3">
+            <Rocket className="h-5 w-5 text-[#FF5C00]" />
+            <h2 className="text-xl font-display font-black text-[#111111] uppercase tracking-tight">Pitch Basics</h2>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <label className="md:col-span-2">
-              <span className="mb-2 block text-sm font-medium text-gray-300">Startup Name / Title</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">Startup Name / Title</span>
               <input
                 {...register('title')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="FounderDeck"
               />
-              {errors.title && <p className="mt-1 text-sm text-red-300">{errors.title.message}</p>}
+              {errors.title && <p className="mt-2 text-sm font-semibold text-red-500">{errors.title.message}</p>}
             </label>
 
             <label className="md:col-span-2">
-              <span className="mb-2 block text-sm font-medium text-gray-300">One-Line Tagline</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">One-Line Tagline</span>
               <input
                 {...register('tagline')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="A focused network where founders earn feedback, votes, and investor conversations."
               />
-              {errors.tagline && <p className="mt-1 text-sm text-red-300">{errors.tagline.message}</p>}
+              {errors.tagline && <p className="mt-2 text-sm font-semibold text-red-500">{errors.tagline.message}</p>}
             </label>
 
             <label>
-              <span className="mb-2 block text-sm font-medium text-gray-300">Industry</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">Industry</span>
               <input
                 {...register('industry')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="SaaS"
               />
-              {errors.industry && <p className="mt-1 text-sm text-red-300">{errors.industry.message}</p>}
+              {errors.industry && <p className="mt-2 text-sm font-semibold text-red-500">{errors.industry.message}</p>}
             </label>
 
             <label>
-              <span className="mb-2 block text-sm font-medium text-gray-300">Funding Stage</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">Funding Stage</span>
               <select
                 {...register('funding_stage')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
               >
                 <option value="idea">Idea Stage</option>
                 <option value="mvp">MVP</option>
@@ -227,28 +227,28 @@ export default function PitchForm() {
                 <option value="series_a">Series A</option>
                 <option value="looking_for_cofounders">Looking for co-founders</option>
               </select>
-              {errors.funding_stage && <p className="mt-1 text-sm text-red-300">{errors.funding_stage.message}</p>}
+              {errors.funding_stage && <p className="mt-2 text-sm font-semibold text-red-500">{errors.funding_stage.message}</p>}
             </label>
 
             <div className="md:col-span-2">
               <div className="mb-2 flex items-center justify-between">
-                <label htmlFor="description" className="text-sm font-medium text-gray-300">
+                <label htmlFor="description" className="text-sm font-bold text-gray-700">
                   Full Pitch
                 </label>
                 <button
                   type="button"
                   onClick={handleEnhance}
                   disabled={isEnhancing}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-cyan-950 px-3 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-800/50 hover:bg-cyan-900/80 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5C00]/10 border border-[#FF5C00]/20 px-4 py-2 text-xs font-bold text-[#FF5C00] hover:bg-[#FF5C00]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isEnhancing ? (
                     <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-300" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#FF5C00]" />
                       <span>Enhancing...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="h-3.5 w-3.5 text-cyan-300 animate-pulse" />
+                      <Sparkles className="h-3.5 w-3.5 text-[#FF5C00]" />
                       <span>Enhance with AI</span>
                     </>
                   )}
@@ -258,67 +258,67 @@ export default function PitchForm() {
                 id="description"
                 {...register('description')}
                 rows={9}
-                className="w-full resize-y rounded-md border border-white/10 bg-gray-950 px-4 py-3 leading-7 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm leading-relaxed"
                 placeholder="Describe the problem, your solution, who it is for, current traction, business model, and what kind of collaboration or investment you want."
               />
-              {errors.description && <p className="mt-1 text-sm text-red-300">{errors.description.message}</p>}
+              {errors.description && <p className="mt-2 text-sm font-semibold text-red-500">{errors.description.message}</p>}
             </div>
           </div>
         </section>
 
-        <section className="rounded-lg border border-white/10 bg-gray-900 p-6">
-          <div className="mb-6 flex items-center gap-2 border-b border-white/10 pb-3">
-            <Link2 className="h-5 w-5 text-cyan-300" />
-            <h2 className="text-lg font-semibold text-white">Links and Discovery</h2>
+        <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+          <div className="mb-6 flex items-center gap-2 border-b border-black/5 pb-3">
+            <Link2 className="h-5 w-5 text-[#FF5C00]" />
+            <h2 className="text-xl font-display font-black text-[#111111] uppercase tracking-tight">Links and Discovery</h2>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <label>
-              <span className="mb-2 block text-sm font-medium text-gray-300">Tech Stack</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">Tech Stack</span>
               <input
                 {...register('tech_stack')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="React, Laravel, PostgreSQL"
               />
             </label>
 
             <label>
-              <span className="mb-2 block text-sm font-medium text-gray-300">Tags</span>
+              <span className="mb-2 block text-sm font-bold text-gray-700">Tags</span>
               <input
                 {...register('tags')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="ai, marketplace, productivity"
               />
             </label>
 
             <label>
-              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><Image className="h-4 w-4" /> Cover Image URL</span>
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700"><Image className="h-4 w-4" /> Cover Image URL</span>
               <input
                 {...register('cover_image_url')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="https://..."
               />
-              {errors.cover_image_url && <p className="mt-1 text-sm text-red-300">{errors.cover_image_url.message}</p>}
+              {errors.cover_image_url && <p className="mt-2 text-sm font-semibold text-red-500">{errors.cover_image_url.message}</p>}
             </label>
 
             <label>
-              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><Link2 className="h-4 w-4" /> Demo URL</span>
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700"><Link2 className="h-4 w-4" /> Demo URL</span>
               <input
                 {...register('demo_url')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="https://..."
               />
-              {errors.demo_url && <p className="mt-1 text-sm text-red-300">{errors.demo_url.message}</p>}
+              {errors.demo_url && <p className="mt-2 text-sm font-semibold text-red-500">{errors.demo_url.message}</p>}
             </label>
 
             <label className="md:col-span-2">
-              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><Code2 className="h-4 w-4" /> GitHub Repository URL</span>
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700"><Code2 className="h-4 w-4" /> GitHub Repository URL</span>
               <input
                 {...register('github_repo_url')}
-                className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                 placeholder="https://github.com/yourname/project"
               />
-              {errors.github_repo_url && <p className="mt-1 text-sm text-red-300">{errors.github_repo_url.message}</p>}
+              {errors.github_repo_url && <p className="mt-2 text-sm font-semibold text-red-500">{errors.github_repo_url.message}</p>}
             </label>
           </div>
         </section>
@@ -327,7 +327,7 @@ export default function PitchForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-8 py-3 font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] shadow-md shadow-[#FF5C00]/15 px-8 py-3.5 font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSubmitting && <Loader2 className="h-5 w-5 animate-spin" />}
             {isEditing ? 'Save Pitch' : 'Publish Pitch'}

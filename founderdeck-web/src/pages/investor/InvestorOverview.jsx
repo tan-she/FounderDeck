@@ -28,10 +28,10 @@ export default function InvestorOverview() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Investor Dashboard</h1>
-          <p className="mt-1 text-gray-400">Find strong ideas and manage founder outreach.</p>
+          <h1 className="text-3xl font-display font-black text-[#111111] uppercase tracking-tight">Investor Dashboard</h1>
+          <p className="mt-1 text-sm font-semibold text-gray-500">Find strong ideas and manage founder outreach.</p>
         </div>
-        <Link to="/pitches" className="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-500 px-4 py-2.5 font-semibold text-gray-950 transition hover:bg-cyan-400">
+        <Link to="/pitches" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] shadow-md shadow-[#FF5C00]/15 px-6 py-3 font-bold text-white transition-all">
           <Search className="h-4 w-4" /> Browse Pitches
         </Link>
       </div>
@@ -42,21 +42,21 @@ export default function InvestorOverview() {
         <Stat icon={Handshake} label="Accepted" value={accepted} />
       </div>
 
-      <section className="rounded-lg border border-white/10 bg-gray-900 p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Trending now</h2>
-          <Link to="/pitches" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">View feed</Link>
+      <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-xl font-display font-black text-[#111111] uppercase tracking-tight">Trending now</h2>
+          <Link to="/pitches" className="text-sm font-bold text-[#FF5C00] hover:text-[#E65300] transition-colors">View feed</Link>
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {posts.map((post) => (
-            <Link key={post.id} to={`/pitches/${post.id}`} className="rounded-lg border border-white/10 bg-gray-950 p-4 transition hover:border-cyan-400/60">
-              <div className="mb-2 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-md bg-cyan-400/10 px-2 py-1 text-cyan-200">{post.industry}</span>
-                <span className="rounded-md bg-gray-800 px-2 py-1 text-gray-300">{formatStage(post.funding_stage)}</span>
+            <Link key={post.id} to={`/pitches/${post.id}`} className="block rounded-xl border border-black/5 bg-[#F4F4F4] p-5 transition hover:border-[#FF5C00]/30">
+              <div className="mb-3 flex flex-wrap gap-2 text-xs">
+                <span className="rounded-md bg-[#FF5C00]/10 px-2 py-1 font-bold text-[#FF5C00] uppercase tracking-wide">{post.industry}</span>
+                <span className="rounded-md bg-black/5 px-2 py-1 font-bold text-gray-600 uppercase tracking-wide">{formatStage(post.funding_stage)}</span>
               </div>
-              <h3 className="font-semibold">{post.title}</h3>
-              <p className="mt-1 line-clamp-2 text-sm text-gray-400">{post.tagline}</p>
-              <p className="mt-3 text-xs text-gray-500">{numberCompact(post.upvotes_count)} upvotes</p>
+              <h3 className="font-bold text-[#111111] text-base leading-snug">{post.title}</h3>
+              <p className="mt-1.5 line-clamp-2 text-sm font-semibold text-gray-500 leading-relaxed">{post.tagline}</p>
+              <p className="mt-4 text-xs font-bold text-[#FF5C00] uppercase tracking-wider">{numberCompact(post.upvotes_count)} upvotes</p>
             </Link>
           ))}
         </div>
@@ -67,10 +67,14 @@ export default function InvestorOverview() {
 
 function Stat({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-gray-900 p-5">
-      <Icon className="mb-4 h-5 w-5 text-cyan-300" />
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="mt-1 text-sm text-gray-400">{label}</p>
+    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm flex items-center gap-4">
+      <div className="p-3 bg-[#FF5C00]/10 rounded-xl flex-shrink-0">
+        <Icon className="h-6 w-6 text-[#FF5C00]" />
+      </div>
+      <div>
+        <p className="text-3xl font-display font-black text-[#111111] leading-none">{value}</p>
+        <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gray-400">{label}</p>
+      </div>
     </div>
   );
 }

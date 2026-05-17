@@ -93,18 +93,22 @@ export default function Messages() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-950 pt-20 text-white">
-      <div className="mx-auto grid max-w-7xl gap-0 px-4 py-6 sm:px-6 lg:grid-cols-[330px_1fr] lg:px-8">
-        <aside className="rounded-t-lg border border-white/10 bg-gray-900 lg:rounded-l-lg lg:rounded-tr-none">
-          <div className="border-b border-white/10 p-4">
-            <h1 className="text-xl font-bold">Messages</h1>
-            <p className="mt-1 flex items-center gap-2 text-xs text-gray-500"><LockKeyhole className="h-3.5 w-3.5" /> Stored encrypted on the backend</p>
+    <main className="min-h-screen bg-[#EAEAEA] pt-20 pb-12 text-[#111111]">
+      <div className="mx-auto grid max-w-7xl gap-0 px-4 sm:px-6 lg:grid-cols-[330px_1fr] lg:px-8 border border-black/5 bg-white rounded-2xl overflow-hidden shadow-md">
+        <aside className="border-b lg:border-b-0 lg:border-r border-black/5 bg-[#F4F4F4] flex flex-col">
+          <div className="border-b border-black/5 p-5">
+            <h1 className="text-xl font-display font-black text-[#111111] uppercase tracking-tight">Messages</h1>
+            <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
+              <LockKeyhole className="h-3.5 w-3.5 text-[#FF5C00]" /> Stored encrypted on the backend
+            </p>
           </div>
-          <div className="max-h-[70vh] overflow-y-auto">
+          <div className="max-h-[70vh] overflow-y-auto flex-1">
             {isLoading ? (
-              <div className="flex h-40 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-cyan-400" /></div>
+              <div className="flex h-40 items-center justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-[#FF5C00]" />
+              </div>
             ) : conversationUsers.length === 0 && !activeUser ? (
-              <p className="p-4 text-sm text-gray-400">No conversations yet. Open a pitch and message a founder.</p>
+              <p className="p-5 text-sm font-semibold text-gray-400 leading-relaxed">No conversations yet. Open a pitch and message a founder.</p>
             ) : (
               <>
                 {activeUser && !conversationUsers.some((item) => item.id === activeUser.id) && (
@@ -125,50 +129,58 @@ export default function Messages() {
           </div>
         </aside>
 
-        <section className="flex min-h-[75vh] flex-col rounded-b-lg border-x border-b border-white/10 bg-gray-900 lg:rounded-r-lg lg:rounded-bl-none lg:border-l-0 lg:border-t">
+        <section className="flex min-h-[75vh] flex-col bg-white">
           {activeUser ? (
             <>
-              <div className="flex items-center gap-3 border-b border-white/10 p-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-500/15 font-semibold text-cyan-200">
+              <div className="flex items-center gap-3 border-b border-black/5 p-5 bg-[#F9F9F9]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FF5C00]/10 font-bold text-[#FF5C00]">
                   {initials(activeUser.name)}
                 </div>
                 <div>
-                  <h2 className="font-semibold">{activeUser.name}</h2>
-                  <p className="text-xs text-gray-500">{activeUser.role}</p>
+                  <h2 className="font-bold text-[#111111] text-base">{activeUser.name}</h2>
+                  <p className="text-xs font-bold text-[#FF5C00] uppercase tracking-wider">{activeUser.role}</p>
                 </div>
               </div>
-              <div className="flex-1 space-y-3 overflow-y-auto p-4">
+              <div className="flex-1 space-y-4 overflow-y-auto p-6 bg-white max-h-[55vh]">
                 {messages.length === 0 ? (
-                  <div className="rounded-lg bg-gray-950 p-4 text-sm text-gray-400">Start the conversation with a clear intro and next step.</div>
+                  <div className="rounded-xl border border-black/5 bg-[#F4F4F4] p-5 text-sm font-semibold text-gray-500 leading-relaxed">
+                    Start the conversation with a clear intro and next step.
+                  </div>
                 ) : messages.map((message) => {
                   const mine = message.sender_id === user?.id;
                   return (
                     <div key={message.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[78%] rounded-lg px-4 py-3 text-sm leading-6 ${mine ? 'bg-cyan-500 text-gray-950' : 'bg-gray-950 text-gray-200'}`}>
-                        <p className="whitespace-pre-wrap">{message.body}</p>
-                        <p className={`mt-1 text-[11px] ${mine ? 'text-gray-800' : 'text-gray-500'}`}>{new Date(message.created_at).toLocaleString()}</p>
+                      <div className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm text-sm leading-relaxed ${mine ? 'bg-[#FF5C00] text-white rounded-tr-none shadow-[#FF5C00]/10' : 'bg-[#F4F4F4] border border-black/5 text-[#111111] rounded-tl-none'}`}>
+                        <p className="whitespace-pre-wrap font-semibold">{message.body}</p>
+                        <p className={`mt-1.5 text-[10px] font-bold uppercase tracking-wider ${mine ? 'text-white/80' : 'text-gray-400'}`}>
+                          {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <form onSubmit={handleSend} className="border-t border-white/10 p-4">
+              <form onSubmit={handleSend} className="border-t border-black/5 p-4 bg-[#F9F9F9]">
                 <div className="flex gap-3">
                   <input
                     value={body}
                     onChange={(event) => setBody(event.target.value)}
                     placeholder="Write a private message..."
-                    className="h-11 flex-1 rounded-md border border-white/10 bg-gray-950 px-4 text-sm outline-none transition focus:border-cyan-400"
+                    className="h-11 flex-1 rounded-full border border-black/5 bg-white px-5 text-sm font-semibold outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow placeholder-gray-400 text-gray-800"
                   />
-                  <button type="submit" disabled={isSending || !body.trim()} className="inline-flex h-11 items-center gap-2 rounded-md bg-cyan-500 px-4 text-sm font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:opacity-60">
-                    {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                    Send
+                  <button
+                    type="submit"
+                    disabled={isSending || !body.trim()}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] shadow-md shadow-[#FF5C00]/15 px-6 py-2 text-sm font-bold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSending ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <Send className="h-4 w-4" />}
+                    <span>Send</span>
                   </button>
                 </div>
               </form>
             </>
           ) : (
-            <div className="flex flex-1 items-center justify-center p-8 text-center text-gray-400">Choose a conversation to begin.</div>
+            <div className="flex flex-1 items-center justify-center p-8 text-center font-semibold text-gray-400">Choose a conversation to begin.</div>
           )}
         </section>
       </div>
@@ -181,14 +193,14 @@ function ConversationButton({ user, preview, unread = 0, active = false, onClick
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full items-center gap-3 border-b border-white/10 p-4 text-left transition ${active ? 'bg-cyan-500/10' : 'hover:bg-gray-800'}`}
+      className={`flex w-full items-center gap-3 border-b border-black/5 p-4 text-left transition-all ${active ? 'bg-white border-l-4 border-l-[#FF5C00]' : 'hover:bg-black/5'}`}
     >
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/15 text-sm font-semibold text-cyan-200">{initials(user.name)}</span>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF5C00]/10 text-sm font-bold text-[#FF5C00]">{initials(user.name)}</span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-semibold text-white">{user.name}</span>
-        <span className="block truncate text-xs text-gray-500">{preview || user.role}</span>
+        <span className="block truncate text-sm font-bold text-[#111111]">{user.name}</span>
+        <span className="block truncate text-xs font-semibold text-gray-400">{preview || user.role}</span>
       </span>
-      {unread > 0 && <span className="rounded-full bg-cyan-400 px-2 py-0.5 text-xs font-bold text-gray-950">{unread}</span>}
+      {unread > 0 && <span className="rounded-full bg-[#FF5C00] px-2 py-0.5 text-2xs font-bold text-white shadow-sm shadow-[#FF5C00]/20">{unread}</span>}
     </button>
   );
 }

@@ -33,24 +33,34 @@ export default function AdminReports() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[#111111]">
       <div>
-        <h1 className="text-2xl font-bold">Reports</h1>
-        <p className="mt-1 text-gray-400">Review community reports and moderation notes.</p>
+        <h1 className="text-3xl font-display font-black text-[#111111] uppercase tracking-tight">Reports</h1>
+        <p className="mt-1 text-sm font-semibold text-gray-500">Review community reports and moderation notes.</p>
       </div>
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-gray-900">
+      <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
         {isLoading ? (
-          <div className="flex h-52 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-cyan-400" /></div>
+          <div className="flex h-52 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF5C00]" />
+          </div>
         ) : reports.length === 0 ? (
-          <div className="p-10 text-center text-gray-400">No reports yet.</div>
+          <div className="p-10 text-center font-semibold text-gray-400">No reports yet.</div>
         ) : reports.map((report) => (
-          <div key={report.id} className="flex flex-col gap-3 border-b border-white/10 p-4 last:border-b-0 md:flex-row md:items-center md:justify-between">
+          <div key={report.id} className="flex flex-col gap-3 border-b border-black/5 p-5 last:border-b-0 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="font-semibold">{report.reason}</p>
-              <p className="mt-1 text-sm text-gray-500">Reporter: {report.reporter?.name ?? 'Member'}</p>
+              <p className="font-bold text-[#111111]">{report.reason}</p>
+              <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gray-400">
+                Reporter: {report.reporter?.name ?? 'Member'}
+              </p>
             </div>
-            <button type="button" onClick={() => markReviewed(report)} disabled={report.is_reviewed} className="inline-flex w-fit items-center gap-2 rounded-md bg-cyan-500 px-3 py-2 text-sm font-semibold text-gray-950 disabled:opacity-50">
-              <CheckCheck className="h-4 w-4" /> {report.is_reviewed ? 'Reviewed' : 'Mark reviewed'}
+            <button
+              type="button"
+              onClick={() => markReviewed(report)}
+              disabled={report.is_reviewed}
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] shadow-md shadow-[#FF5C00]/15 px-5 py-2 text-xs font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <CheckCheck className="h-4 w-4" />
+              <span>{report.is_reviewed ? 'Reviewed' : 'Mark reviewed'}</span>
             </button>
           </div>
         ))}

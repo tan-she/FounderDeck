@@ -13,14 +13,18 @@ export default function AdminOverview() {
   }, []);
 
   if (isLoading) {
-    return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-cyan-400" /></div>;
+    return (
+      <div className="flex h-64 items-center justify-center bg-[#EAEAEA]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF5C00]" />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[#111111]">
       <div>
-        <h1 className="text-2xl font-bold">Admin Overview</h1>
-        <p className="mt-1 text-gray-400">Platform health and moderation snapshot.</p>
+        <h1 className="text-3xl font-display font-black text-[#111111] uppercase tracking-tight">Admin Overview</h1>
+        <p className="mt-1 text-sm font-semibold text-gray-500">Platform health and moderation snapshot.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-4">
         <Stat icon={Users} label="Users" value={stats?.total_users ?? 0} />
@@ -34,10 +38,14 @@ export default function AdminOverview() {
 
 function Stat({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-gray-900 p-5">
-      <Icon className="mb-4 h-5 w-5 text-cyan-300" />
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="mt-1 text-sm text-gray-400">{label}</p>
+    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm flex items-center gap-4">
+      <div className="p-3 bg-[#FF5C00]/10 rounded-xl flex-shrink-0">
+        <Icon className="h-6 w-6 text-[#FF5C00]" />
+      </div>
+      <div>
+        <p className="text-3xl font-display font-black text-[#111111] leading-none">{value}</p>
+        <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gray-400">{label}</p>
+      </div>
     </div>
   );
 }
