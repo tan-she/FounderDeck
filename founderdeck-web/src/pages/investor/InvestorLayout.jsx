@@ -13,7 +13,7 @@ export default function InvestorLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#EAEAEA] pt-16 text-[#111111] md:flex">
+    <div className="min-h-screen bg-[#EAEAEA] text-[#111111] md:flex">
       <aside className="z-20 flex h-auto w-full flex-col border-b border-black/5 bg-[#F4F4F4] md:sticky md:top-16 md:h-[calc(100vh-64px)] md:w-64 md:border-b-0 md:border-r">
         <div className="border-b border-black/5 p-6">
           <div className="flex items-center gap-3">
