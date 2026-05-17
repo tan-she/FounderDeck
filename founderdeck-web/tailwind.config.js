@@ -10,6 +10,15 @@ export default {
   theme: {
     extend: {
       colors: {
+        brand: {
+          orange: "#FF5C00",
+          "orange-hover": "#E65300",
+          gray: {
+            light: "#EAEAEA",
+            dark: "#111111",
+            card: "#F4F4F4",
+          }
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -50,7 +59,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        pixel: ['Silkscreen', 'Press Start 2P', 'monospace'],
       },
       animation: {
         'blob': 'blob 7s infinite',

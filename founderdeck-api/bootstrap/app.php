@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'profile.completed' => \App\Http\Middleware\EnsureProfileCompleted::class,
         ]);
 
-        $middleware->statefulApi();
+        // $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

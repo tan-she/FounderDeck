@@ -112,16 +112,16 @@ export default function PitchDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 pt-16">
-        <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
+      <div className="flex min-h-screen items-center justify-center bg-[#EAEAEA] pt-16">
+        <Loader2 className="h-10 w-10 animate-spin text-[#FF5C00]" />
       </div>
     );
   }
 
   if (error || !pitch) {
     return (
-      <main className="min-h-screen bg-gray-950 px-4 pt-28 text-white">
-        <div className="mx-auto max-w-3xl rounded-lg border border-red-500/30 bg-red-500/10 p-6 text-red-100">{error}</div>
+      <main className="min-h-screen bg-[#EAEAEA] px-4 pt-28 text-[#111111]">
+        <div className="mx-auto max-w-3xl rounded-xl border border-red-500/20 bg-red-50 p-6 text-red-600 font-bold">{error}</div>
       </main>
     );
   }
@@ -129,31 +129,31 @@ export default function PitchDetail() {
   const cover = getPostImage(pitch);
 
   return (
-    <main className="min-h-screen bg-gray-950 pt-16 text-white">
-      <section className="border-b border-white/10 bg-gray-900/40">
+    <main className="min-h-screen bg-[#EAEAEA] pt-16 text-[#111111]">
+      <section className="border-b border-black/5 bg-[#F4F4F4]/50 backdrop-blur-md">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8">
           <div>
             <div className="mb-5 flex flex-wrap gap-2">
-              <span className="rounded-md bg-cyan-400/10 px-3 py-1 text-sm font-semibold text-cyan-200">{pitch.industry}</span>
-              <span className="rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-950">{formatStage(pitch.funding_stage)}</span>
+              <span className="rounded-md bg-[#FF5C00]/10 px-3 py-1 text-sm font-bold text-[#FF5C00]">{pitch.industry}</span>
+              <span className="rounded-md bg-gray-950 px-3 py-1 text-sm font-bold text-white">{formatStage(pitch.funding_stage)}</span>
             </div>
-            <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl">{pitch.title}</h1>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-300">{pitch.tagline}</p>
+            <h1 className="max-w-4xl text-4xl font-display font-black tracking-tight sm:text-5xl text-[#111111]">{pitch.title}</h1>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-500 font-semibold">{pitch.tagline}</p>
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
-              <Link to={`/profile/${pitch.user?.id}`} className="inline-flex items-center gap-3 rounded-lg border border-white/10 bg-gray-950 px-3 py-2 transition hover:border-cyan-400/60">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/15 text-sm font-semibold text-cyan-200">
+              <Link to={`/profile/${pitch.user?.id}`} className="inline-flex items-center gap-3 rounded-2xl border border-black/5 bg-white px-4 py-2.5 transition hover:border-[#FF5C00]/40 shadow-sm">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF5C00]/15 text-sm font-bold text-[#FF5C00]">
                   {initials(pitch.user?.name)}
                 </span>
                 <span>
-                  <span className="block text-sm font-semibold">{pitch.user?.name ?? 'Founder'}</span>
-                  <span className="block text-xs text-gray-500">View founder profile</span>
+                  <span className="block text-sm font-bold text-gray-800">{pitch.user?.name ?? 'Founder'}</span>
+                  <span className="block text-xs text-gray-400 font-semibold">View founder profile</span>
                 </span>
               </Link>
               {isOwner && (
                 <Link
                   to={`/dashboard/entrepreneur/pitches/${pitch.id}/edit`}
-                  className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-cyan-400"
+                  className="rounded-full bg-[#FF5C00] hover:bg-[#E65300] px-5 py-2.5 text-sm font-bold text-white transition-all shadow-md shadow-[#FF5C00]/15 hover:scale-[1.02]"
                 >
                   Edit Pitch
                 </Link>
@@ -161,28 +161,28 @@ export default function PitchDetail() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-lg border border-white/10 bg-gray-900">
-            <div className="h-56 bg-gray-800">
+          <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+            <div className="h-56 bg-gray-100">
               {cover ? (
                 <img src={cover} alt={pitch.title} className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.25),transparent_35%),linear-gradient(135deg,#111827,#164e63)]">
-                  <span className="text-4xl font-bold text-white/80">{initials(pitch.title)}</span>
+                <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_20%_20%,rgba(255,92,0,0.15),transparent_35%),linear-gradient(135deg,#F4F4F4,#EAEAEA)]">
+                  <span className="text-4xl font-display font-black text-[#FF5C00]">{initials(pitch.title)}</span>
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 text-center">
+            <div className="grid grid-cols-3 divide-x divide-black/5 border-t border-black/5 text-center">
               <div className="p-4">
-                <p className="text-xl font-bold">{numberCompact((pitch.upvotes_count ?? 0) - (pitch.downvotes_count ?? 0))}</p>
-                <p className="text-xs text-gray-500">Score</p>
+                <p className="text-xl font-display font-black text-[#111111]">{numberCompact((pitch.upvotes_count ?? 0) - (pitch.downvotes_count ?? 0))}</p>
+                <p className="text-xs font-semibold text-gray-400">Score</p>
               </div>
               <div className="p-4">
-                <p className="text-xl font-bold">{numberCompact(pitch.comments_count)}</p>
-                <p className="text-xs text-gray-500">Comments</p>
+                <p className="text-xl font-display font-black text-[#111111]">{numberCompact(pitch.comments_count)}</p>
+                <p className="text-xs font-semibold text-gray-400">Comments</p>
               </div>
               <div className="p-4">
-                <p className="text-xl font-bold">{numberCompact(pitch.views_count)}</p>
-                <p className="text-xs text-gray-500">Views</p>
+                <p className="text-xl font-display font-black text-[#111111]">{numberCompact(pitch.views_count)}</p>
+                <p className="text-xs font-semibold text-gray-400">Views</p>
               </div>
             </div>
           </div>
@@ -191,39 +191,39 @@ export default function PitchDetail() {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8">
         <div className="space-y-8">
-          <article className="rounded-lg border border-white/10 bg-gray-900 p-6">
-            <h2 className="text-xl font-semibold">Pitch</h2>
-            <p className="mt-4 whitespace-pre-wrap leading-8 text-gray-300">{pitch.description}</p>
+          <article className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-display font-black text-[#111111]">Pitch</h2>
+            <p className="mt-4 whitespace-pre-wrap leading-8 text-gray-600 font-medium text-sm sm:text-base">{pitch.description}</p>
 
             {(pitch.tech_stack?.length > 0 || pitch.tags?.length > 0) && (
               <div className="mt-6 flex flex-wrap gap-2">
                 {(pitch.tech_stack ?? []).map((item) => (
-                  <span key={item} className="rounded-md bg-gray-800 px-2.5 py-1 text-sm text-gray-300">{item}</span>
+                  <span key={item} className="rounded-full bg-[#F4F4F4] border border-black/5 px-3 py-1 text-sm font-semibold text-gray-600">{item}</span>
                 ))}
                 {(pitch.tags ?? []).map((tag) => (
-                  <span key={tag.id ?? tag.name} className="rounded-md border border-white/10 px-2.5 py-1 text-sm text-cyan-200">#{tag.name}</span>
+                  <span key={tag.id ?? tag.name} className="rounded-full border border-[#FF5C00]/10 bg-[#FF5C00]/5 px-3 py-1 text-sm font-bold text-[#FF5C00]">#{tag.name}</span>
                 ))}
               </div>
             )}
 
             <div className="mt-6 flex flex-wrap gap-3">
               {pitch.demo_url && (
-                <a href={pitch.demo_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 transition hover:border-cyan-400/60">
+                <a href={pitch.demo_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#F4F4F4]/50 px-4 py-2 text-sm font-bold text-gray-700 transition hover:border-[#FF5C00]/40">
                   Live demo <ArrowUpRight className="h-4 w-4" />
                 </a>
               )}
               {pitch.github_repo_url && (
-                <a href={pitch.github_repo_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-200 transition hover:border-cyan-400/60">
+                <a href={pitch.github_repo_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#F4F4F4]/50 px-4 py-2 text-sm font-bold text-gray-700 transition hover:border-[#FF5C00]/40">
                   <Code2 className="h-4 w-4" /> GitHub
                 </a>
               )}
             </div>
           </article>
 
-          <section className="rounded-lg border border-white/10 bg-gray-900 p-6">
+          <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Founder Feedback</h2>
-              <span className="text-sm text-gray-500">{comments.length} comments</span>
+              <h2 className="text-xl font-display font-black text-[#111111]">Founder Feedback</h2>
+              <span className="text-sm font-semibold text-gray-400">{comments.length} comments</span>
             </div>
 
             <form onSubmit={handleComment} className="mb-6">
@@ -233,13 +233,13 @@ export default function PitchDetail() {
                 rows={3}
                 placeholder={isAuthenticated ? 'Share feedback, a question, or validation insight...' : 'Log in to comment'}
                 disabled={!isAuthenticated}
-                className="w-full resize-y rounded-md border border-white/10 bg-gray-950 p-3 text-sm leading-6 text-white outline-none transition focus:border-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full resize-y rounded-xl border border-black/5 bg-[#F4F4F4] p-3 text-sm leading-6 text-gray-800 font-semibold outline-none transition focus:border-[#FF5C00] disabled:cursor-not-allowed disabled:opacity-60"
               />
               <div className="mt-3 flex justify-end">
                 <button
                   type="submit"
                   disabled={!isAuthenticated || isCommenting || !comment.trim()}
-                  className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] px-5 py-2.5 text-sm font-bold text-white transition-all shadow-md shadow-[#FF5C00]/15 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isCommenting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   Post Comment
@@ -249,19 +249,19 @@ export default function PitchDetail() {
 
             <div className="space-y-4">
               {comments.length === 0 ? (
-                <p className="rounded-lg bg-gray-950 p-4 text-sm text-gray-400">No comments yet. Be the first to add useful feedback.</p>
+                <p className="rounded-xl bg-[#F4F4F4] p-4 text-sm font-semibold text-gray-400">No comments yet. Be the first to add useful feedback.</p>
               ) : comments.map((item) => (
-                <article key={item.id} className="rounded-lg border border-white/10 bg-gray-950 p-4">
+                <article key={item.id} className="rounded-xl border border-black/5 bg-[#F4F4F4] p-4">
                   <div className="mb-2 flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-xs font-semibold text-cyan-200">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FF5C00]/10 text-xs font-bold text-[#FF5C00]">
                       {initials(item.user?.name)}
                     </span>
                     <div>
-                      <p className="text-sm font-semibold">{item.user?.name ?? 'Member'}</p>
-                      <p className="text-xs text-gray-500">{new Date(item.created_at).toLocaleDateString()}</p>
+                      <p className="text-sm font-bold text-gray-800">{item.user?.name ?? 'Member'}</p>
+                      <p className="text-xs text-gray-400 font-semibold">{new Date(item.created_at).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  <p className="whitespace-pre-wrap text-sm leading-6 text-gray-300">{item.body}</p>
+                  <p className="whitespace-pre-wrap text-sm leading-6 text-gray-600 font-semibold">{item.body}</p>
                 </article>
               ))}
             </div>
@@ -269,13 +269,13 @@ export default function PitchDetail() {
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-lg border border-white/10 bg-gray-900 p-5">
-            <h2 className="mb-4 text-lg font-semibold">Vote on the idea</h2>
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
+            <h2 className="mb-4 text-lg font-display font-black text-[#111111]">Vote on the idea</h2>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => handleVote('up')}
-                className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition ${pitch.user_vote === 'up' ? 'bg-cyan-500 text-gray-950' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}`}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition ${pitch.user_vote === 'up' ? 'bg-[#FF5C00] text-white shadow-md shadow-[#FF5C00]/15' : 'bg-[#F4F4F4] text-gray-700 hover:bg-black/5'}`}
               >
                 <ThumbsUp className="h-4 w-4" />
                 {numberCompact(pitch.upvotes_count)}
@@ -283,7 +283,7 @@ export default function PitchDetail() {
               <button
                 type="button"
                 onClick={() => handleVote('down')}
-                className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition ${pitch.user_vote === 'down' ? 'bg-red-400 text-gray-950' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}`}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition ${pitch.user_vote === 'down' ? 'bg-red-500 text-white shadow-md shadow-red-500/15' : 'bg-[#F4F4F4] text-gray-700 hover:bg-black/5'}`}
               >
                 <ThumbsDown className="h-4 w-4" />
                 {numberCompact(pitch.downvotes_count)}
@@ -291,35 +291,35 @@ export default function PitchDetail() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-white/10 bg-gray-900 p-5">
-            <h2 className="text-lg font-semibold">Connect</h2>
-            <p className="mt-2 text-sm leading-6 text-gray-400">Investors can request collaboration. Accepted requests can move into private encrypted messaging.</p>
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-display font-black text-[#111111]">Connect</h2>
+            <p className="mt-2 text-sm leading-6 text-gray-500 font-semibold">Investors can request collaboration. Accepted requests can move into private encrypted messaging.</p>
             {canRequestCollab ? (
               <form onSubmit={handleCollab} className="mt-4 space-y-3">
                 <textarea
                   value={collabMessage}
                   onChange={(event) => setCollabMessage(event.target.value)}
                   rows={5}
-                  className="w-full resize-y rounded-md border border-white/10 bg-gray-950 p-3 text-sm leading-6 text-white outline-none transition focus:border-cyan-400"
+                  className="w-full resize-y rounded-xl border border-black/5 bg-[#F4F4F4] p-3 text-sm leading-6 text-gray-800 font-semibold outline-none transition focus:border-[#FF5C00]"
                 />
                 <button
                   type="submit"
                   disabled={isSendingCollab || !collabMessage.trim()}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#FF5C00] hover:bg-[#E65300] px-5 py-2.5 text-sm font-bold text-white transition-all shadow-md shadow-[#FF5C00]/15 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSendingCollab ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                   Request Collaboration
                 </button>
               </form>
             ) : (
-              <div className="mt-4 rounded-lg bg-gray-950 p-4 text-sm text-gray-400">
+              <div className="mt-4 rounded-xl bg-[#F4F4F4] p-4 text-sm font-semibold text-gray-500">
                 {isAuthenticated ? 'Collaboration requests are available from investor accounts.' : 'Log in as an investor to request collaboration.'}
               </div>
             )}
             {isAuthenticated && !isOwner && (
               <Link
                 to={`/messages?user=${pitch.user?.id}`}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-cyan-400/60"
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-[#F4F4F4]/50 px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:border-[#FF5C00]/40"
               >
                 <MessageSquare className="h-4 w-4" />
                 Message Founder

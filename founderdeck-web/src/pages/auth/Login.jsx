@@ -33,63 +33,63 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[#EAEAEA] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-[#FF5C00]/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="mt-6 text-center text-3xl font-display font-black text-[#111111] tracking-tight">
           Welcome back
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-400">
+        <p className="mt-2 text-center text-sm font-semibold text-gray-500">
           Or{' '}
-          <Link to="/register" className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+          <Link to="/register" className="font-bold text-[#FF5C00] hover:text-[#E65300] transition-colors">
             create a new account
           </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-gray-900/80 backdrop-blur-xl py-8 px-4 shadow-2xl border border-white/10 sm:rounded-2xl sm:px-10">
+        <div className="bg-white py-8 px-4 shadow-xl border border-black/5 sm:rounded-2xl sm:px-10">
           
           {error && (
-            <div className="mb-6 bg-red-500/10 border border-red-500/50 p-4 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-400">{error}</p>
+            <div className="mb-6 bg-red-50 border border-red-500/20 p-4 rounded-xl flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm font-semibold text-red-600">{error}</p>
             </div>
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label className="block text-sm font-bold text-gray-700">
                 Email address
               </label>
               <div className="mt-1">
                 <input
                   {...register('email')}
                   type="email"
-                  className="appearance-none block w-full px-3 py-2.5 border border-gray-700 bg-gray-800 rounded-lg placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                   placeholder="admin@founderdeck.com"
                 />
                 {errors.email && (
-                  <p className="mt-2 text-sm text-red-400">{errors.email.message}</p>
+                  <p className="mt-2 text-sm font-semibold text-red-500">{errors.email.message}</p>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label className="block text-sm font-bold text-gray-700">
                 Password
               </label>
               <div className="mt-1">
                 <input
                   {...register('password')}
                   type="password"
-                  className="appearance-none block w-full px-3 py-2.5 border border-gray-700 bg-gray-800 rounded-lg placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
                   placeholder="••••••••"
                 />
                 {errors.password && (
-                  <p className="mt-2 text-sm text-red-400">{errors.password.message}</p>
+                  <p className="mt-2 text-sm font-semibold text-red-500">{errors.password.message}</p>
                 )}
               </div>
             </div>
@@ -100,15 +100,15 @@ export default function Login() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-indigo-500 focus:ring-indigo-500 border-gray-700 rounded bg-gray-800"
+                  className="h-4 w-4 text-[#FF5C00] focus:ring-[#FF5C00] border-black/10 rounded bg-[#F4F4F4]"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
+                <label htmlFor="remember-me" className="ml-2 block text-sm font-semibold text-gray-500">
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">
+                <a href="#" className="font-bold text-[#FF5C00] hover:text-[#E65300] transition-colors">
                   Forgot your password?
                 </a>
               </div>
@@ -118,7 +118,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-md shadow-[#FF5C00]/15 text-sm font-bold text-white bg-[#FF5C00] hover:bg-[#E65300] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5C00] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -132,17 +132,17 @@ export default function Login() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-700" />
+                <div className="w-full border-t border-black/5" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-900 text-gray-400">Or continue with</span>
+                <span className="px-2 bg-white text-gray-400 font-semibold">Or continue with</span>
               </div>
             </div>
 
             <div className="mt-6">
               <a
                 href={oauthUrl('google')}
-                className="w-full inline-flex justify-center py-2.5 px-4 border border-gray-700 rounded-lg shadow-sm bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors"
+                className="w-full inline-flex justify-center py-2.5 px-4 border border-black/10 rounded-full bg-[#F4F4F4] text-sm font-bold text-gray-700 hover:bg-black/5 transition-colors"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path

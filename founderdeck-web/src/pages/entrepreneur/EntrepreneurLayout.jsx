@@ -19,22 +19,22 @@ export default function EntrepreneurLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col md:flex-row text-white pt-16">
+    <div className="min-h-screen bg-[#EAEAEA] flex flex-col md:flex-row text-[#111111] pt-16">
       
       {/* Sidebar */}
-      <aside className="z-20 flex h-auto w-full flex-col border-b border-gray-800 bg-gray-900 md:sticky md:top-16 md:h-[calc(100vh-64px)] md:w-64 md:border-b-0 md:border-r">
-        <div className="p-6 border-b border-gray-800">
+      <aside className="z-20 flex h-auto w-full flex-col border-b border-black/5 bg-[#F4F4F4] md:sticky md:top-16 md:h-[calc(100vh-64px)] md:w-64 md:border-b-0 md:border-r">
+        <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
             {user?.avatar_url ? (
-              <img src={user.avatar_url} alt={user.name} className="w-10 h-10 rounded-full bg-gray-800" />
+              <img src={user.avatar_url} alt={user.name} className="w-10 h-10 rounded-full bg-gray-200" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-full bg-[#FF5C00] text-white flex items-center justify-center font-bold">
                 {initials(user?.name)}
               </div>
             )}
             <div>
-              <p className="font-medium text-sm truncate w-32">{user?.name}</p>
-              <p className="text-xs text-indigo-400 font-medium">Founder</p>
+              <p className="font-semibold text-sm truncate w-32 text-[#111111]">{user?.name}</p>
+              <p className="text-xs text-[#FF5C00] font-black font-display uppercase tracking-wider">Founder</p>
             </div>
           </div>
         </div>
@@ -46,10 +46,10 @@ export default function EntrepreneurLayout() {
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                   isActive 
-                    ? 'bg-indigo-500/10 text-indigo-400' 
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-[#FF5C00]/10 text-[#FF5C00]' 
+                    : 'text-gray-600 hover:bg-black/5 hover:text-black'
                 }`
               }
             >
@@ -59,10 +59,10 @@ export default function EntrepreneurLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-black/5">
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -71,7 +71,7 @@ export default function EntrepreneurLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 min-w-0 bg-gray-950 p-6 md:p-8 ml-0 md:ml-0">
+      <main className="flex-1 min-w-0 bg-[#EAEAEA] p-6 md:p-8 ml-0 md:ml-0">
         <Outlet />
       </main>
     </div>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -7,17 +7,17 @@
     <title>FounderDeck - Where Founders Meet Their Future Investors</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet">
     <script>
       (function() {
-        const theme = localStorage.getItem('theme') || 'dark';
+        const theme = localStorage.getItem('theme') || 'light';
         if (theme === 'dark') document.documentElement.classList.add('dark');
         else document.documentElement.classList.remove('dark');
-        document.documentElement.style.backgroundColor = '#030712';
+        document.documentElement.style.backgroundColor = '#EAEAEA';
       })();
     </script>
   </head>
-  <body class="bg-gray-950 text-white antialiased">
+  <body class="bg-[#EAEAEA] text-[#111111] antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

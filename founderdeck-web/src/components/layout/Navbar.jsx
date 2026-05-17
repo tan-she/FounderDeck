@@ -28,36 +28,37 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-950/80 backdrop-blur-md border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#EAEAEA]/80 backdrop-blur-md border-b border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            <Link to="/" className="text-xl font-display font-black tracking-tight text-gray-950 flex items-center gap-1.5 hover:text-[#FF5C00] transition-colors">
+              <span className="w-2.5 h-2.5 bg-[#FF5C00] rounded-sm transform rotate-45" />
               FounderDeck
             </Link>
           </div>
 
           <div className="hidden md:flex space-x-8 items-center">
-            <Link to="/pitches" className="text-gray-300 hover:text-white transition">Pitches</Link>
-            <Link to="/#how-it-works" className="text-gray-300 hover:text-white transition">How it works</Link>
+            <Link to="/pitches" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Pitches</Link>
+            <Link to="/#how-it-works" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">How it works</Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <Link to="/notifications" className="text-gray-400 hover:text-white">
+                <Link to="/notifications" className="text-gray-600 hover:text-black hover:scale-105 transition-all">
                   <Bell className="w-5 h-5" />
                 </Link>
                 <div className="relative group">
-                  <button className="flex items-center space-x-2 text-gray-300 hover:text-white">
-                    <UserCircle className="w-6 h-6" />
+                  <button className="flex items-center space-x-2 text-gray-700 hover:text-black font-semibold text-sm">
+                    <UserCircle className="w-6 h-6 text-gray-600" />
                     <span>{user?.name || 'Account'}</span>
                   </button>
-                  <div className="absolute right-0 w-48 mt-2 py-2 bg-gray-900 border border-white/10 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                    <Link to={getDashboardLink()} className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800">
-                      <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
+                  <div className="absolute right-0 w-48 mt-2 py-2 bg-white border border-black/5 rounded-xl shadow-xl shadow-black/[0.05] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                    <Link to={getDashboardLink()} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
+                      <LayoutDashboard className="w-4 h-4 mr-2 text-gray-500" /> Dashboard
                     </Link>
-                    <button onClick={handleLogout} className="w-full flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-800">
+                    <button onClick={handleLogout} className="w-full flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50 font-semibold">
                       <LogOut className="w-4 h-4 mr-2" /> Sign Out
                     </button>
                   </div>
@@ -65,8 +66,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-300 hover:text-white transition">Login</Link>
-                <Link to="/register" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-medium transition">
+                <Link to="/login" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Login</Link>
+                <Link to="/register" className="bg-[#FF5C00] hover:bg-[#E65300] text-white px-5 py-2.5 rounded-full font-bold shadow-md shadow-[#FF5C00]/15 transition-all text-sm">
                   Get Started
                 </Link>
               </>
@@ -77,7 +78,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsOpen((value) => !value)}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-600 hover:text-black"
               aria-label="Toggle navigation"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -86,19 +87,19 @@ export default function Navbar() {
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden border-t border-white/10 bg-gray-950/95 px-4 py-4">
+        <div className="md:hidden border-t border-black/5 bg-[#EAEAEA] px-4 py-4 shadow-inner">
           <div className="flex flex-col gap-3">
-            <Link onClick={() => setIsOpen(false)} to="/pitches" className="text-gray-300 hover:text-white transition">Pitches</Link>
+            <Link onClick={() => setIsOpen(false)} to="/pitches" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Pitches</Link>
             {isAuthenticated ? (
               <>
-                <Link onClick={() => setIsOpen(false)} to={getDashboardLink()} className="text-gray-300 hover:text-white transition">Dashboard</Link>
-                <Link onClick={() => setIsOpen(false)} to="/notifications" className="text-gray-300 hover:text-white transition">Notifications</Link>
-                <button onClick={handleLogout} className="text-left text-red-400 hover:text-red-300 transition">Sign Out</button>
+                <Link onClick={() => setIsOpen(false)} to={getDashboardLink()} className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Dashboard</Link>
+                <Link onClick={() => setIsOpen(false)} to="/notifications" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Notifications</Link>
+                <button onClick={handleLogout} className="text-left text-sm font-semibold text-red-500 hover:text-red-600 transition">Sign Out</button>
               </>
             ) : (
               <>
-                <Link onClick={() => setIsOpen(false)} to="/login" className="text-gray-300 hover:text-white transition">Login</Link>
-                <Link onClick={() => setIsOpen(false)} to="/register" className="rounded-md bg-indigo-600 px-4 py-2 text-center font-medium text-white hover:bg-indigo-700 transition">Get Started</Link>
+                <Link onClick={() => setIsOpen(false)} to="/login" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Login</Link>
+                <Link onClick={() => setIsOpen(false)} to="/register" className="rounded-full bg-[#FF5C00] px-4 py-2.5 text-center font-bold text-white hover:bg-[#E65300] transition shadow-md shadow-[#FF5C00]/15 text-sm">Get Started</Link>
               </>
             )}
           </div>
