@@ -8,15 +8,14 @@ import './index.css';
 
 const queryClient = new QueryClient();
 
-document.documentElement.classList.add('dark');
-document.body.classList.add('font-sans', 'antialiased', 'bg-gray-950', 'text-white');
+document.body.classList.add('font-sans', 'antialiased', 'bg-[#EAEAEA]', 'text-[#111111]');
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <App />
-        <Toaster position="top-right" theme="dark" />
+        <Toaster position="top-right" richColors />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

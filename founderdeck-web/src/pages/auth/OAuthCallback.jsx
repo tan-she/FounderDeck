@@ -42,10 +42,10 @@ export default function OAuthCallback() {
   }, [searchParams, navigate, hydrateFromStorage]);
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center p-4">
-      <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
-      <h2 className="text-xl font-medium text-white">Authenticating with Google...</h2>
-      <p className="text-gray-400 mt-2">Please wait while we log you in.</p>
+    <div className="min-h-screen bg-[#EAEAEA] flex flex-col items-center justify-center p-4">
+      <Loader2 className="w-12 h-12 text-[#FF5C00] animate-spin mb-4" />
+      <h2 className="text-xl font-display font-black text-[#111111]">Authenticating with Google...</h2>
+      <p className="text-gray-500 font-semibold mt-2">Please wait while we log you in.</p>
     </div>
   );
 }
