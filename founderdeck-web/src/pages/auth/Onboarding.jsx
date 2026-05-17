@@ -1,0 +1,101 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api/axios';
+import { useAuthStore } from '../../store/useAuthStore';
+import { BriefcaseBusiness, Code2, Loader2, UserRoundCheck } from 'lucide-react';
+import { toast } from 'sonner';
+
+export default function Onboarding() {
+  const navigate = useNavigate();
+  const { user, setUser } = useAuthStore();
+  const [form, setForm] = useState({
+    name: user?.name ?? '',
+    bio: user?.bio ?? '',
+    linkedin_url: user?.linkedin_url ?? '',
+    github_url: user?.github_url ?? '',
+    avatar_url: user?.avatar_url ?? '',
+  });
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dashboardPath = user?.role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor';
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+
+    try {
+      const payload = {
+        ...form,
+        profile_completed: true,
+        linkedin_url: form.linkedin_url || null,
+        github_url: form.github_url || null,
+        avatar_url: form.avatar_url || null,
+      };
+      const { data } = await api.put('/profile', payload);
+      setUser(data.data);
+      toast.success('Profile saved');
+      navigate(dashboardPath, { replace: true });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Could not save profile.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-gray-950 px-4 pt-28 pb-12 text-white">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-3xl rounded-lg border border-white/10 bg-gray-900 p-6">
+        <div className="mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/10">
+            <UserRoundCheck className="h-6 w-6 text-cyan-300" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Complete your profile</h1>
+            <p className="text-sm text-gray-400">Add the links investors and founders need to trust your profile.</p>
+          </div>
+        </div>
+
+        <div className="grid gap-5">
+          <label>
+            <span className="mb-2 block text-sm font-medium text-gray-300">Display Name</span>
+            <input name="name" value={form.name} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" />
+          </label>
+
+          <label>
+            <span className="mb-2 block text-sm font-medium text-gray-300">Bio</span>
+            <textarea name="bio" value={form.bio} onChange={handleChange} rows={5} className="w-full resize-y rounded-md border border-white/10 bg-gray-950 px-4 py-3 leading-7 outline-none transition focus:border-cyan-400" placeholder="Tell people what you build, invest in, or want to collaborate on." />
+          </label>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <label>
+              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><BriefcaseBusiness className="h-4 w-4" /> LinkedIn URL</span>
+              <input name="linkedin_url" value={form.linkedin_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://linkedin.com/in/username" />
+            </label>
+
+            <label>
+              <span className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-300"><Code2 className="h-4 w-4" /> GitHub URL</span>
+              <input name="github_url" value={form.github_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://github.com/username" />
+            </label>
+          </div>
+
+          <label>
+            <span className="mb-2 block text-sm font-medium text-gray-300">Avatar URL</span>
+            <input name="avatar_url" value={form.avatar_url} onChange={handleChange} className="w-full rounded-md border border-white/10 bg-gray-950 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="https://..." />
+          </label>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <button type="submit" disabled={isSaving} className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-6 py-3 font-semibold text-gray-950 transition hover:bg-cyan-400 disabled:opacity-60">
+            {isSaving && <Loader2 className="h-5 w-5 animate-spin" />}
+            Save and Continue
+          </button>
+        </div>
+      </form>
+    </main>
+  );
+}

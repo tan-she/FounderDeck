@@ -1,0 +1,44 @@
+databases:
+  - name: founderdeck-db
+    databaseName: founderdeck
+    user: founderdeck
+
+services:
+  - type: web
+    name: founderdeck-api
+    runtime: php
+    plan: free
+    rootDir: founderdeck-api
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_NAME
+        value: FounderDeck
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://founderdeck-api.onrender.com
+      - key: FRONTEND_URL
+        value: https://founderdeck-web.vercel.app
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://founderdeck-web.vercel.app
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: founderdeck-db
+          property: connectionString
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: SESSION_DRIVER
+        value: database
+      - key: BROADCAST_CONNECTION
+        value: log
+      - key: MAIL_MAILER
+        value: log

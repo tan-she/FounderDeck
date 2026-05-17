@@ -1,0 +1,9 @@
+# Prevent accidentally committing secrets if git init is run at the root level
+.env
+.env.local
+.env.*.local
+node_modules/
+*/node_modules/
+*/.env
+*/.env.local
+.DS_Store
