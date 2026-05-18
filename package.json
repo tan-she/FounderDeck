@@ -1,0 +1,21 @@
+{
+  "name": "founderdecck",
+  "version": "1.0.0",
+  "description": "[![DevOps CI/CD Pipeline](https://github.com/tan-she/FounderDeck/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/tan-she/FounderDeck/actions/workflows/ci-cd.yml)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests in root\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tan-she/FounderDeck.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tan-she/FounderDeck/issues"
+  },
+  "homepage": "https://github.com/tan-she/FounderDeck#readme"
+}
