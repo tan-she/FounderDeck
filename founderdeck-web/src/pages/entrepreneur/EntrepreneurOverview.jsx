@@ -9,12 +9,7 @@ import {
   Plus,
   Presentation,
   ThumbsUp,
-  TrendingUp,
-  Globe,
   Sparkles,
-  Eye,
-  ArrowUpRight,
-  TrendingDown,
   Flame,
   Snowflake,
   Heart,
@@ -47,12 +42,10 @@ export default function EntrepreneurOverview() {
   const totalVotes = totalUpvotes - totalDownvotes;
   const totalComments = posts.reduce((sum, post) => sum + (post.comments_count ?? 0), 0);
   const totalViews = posts.reduce((sum, post) => sum + (post.views_count ?? 0), 0);
-  const pendingCollabs = collabs.filter((item) => item.status === 'pending').length;
 
   // Calculate vote percentage breakdown for SVG ring
   const totalVoteCount = totalUpvotes + totalDownvotes;
   const upvotePercent = totalVoteCount > 0 ? Math.round((totalUpvotes / totalVoteCount) * 100) : 100;
-  const downvotePercent = totalVoteCount > 0 ? Math.round((totalDownvotes / totalVoteCount) * 100) : 0;
   
   // SVG donut metrics (Circumference = 2 * PI * r)
   const radius = 36;

@@ -1,36 +1,18 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import { getPosts } from '../../api/posts';
 import { useAuthStore } from '../../store/useAuthStore';
-import { formatStage, getPostImage, initials, numberCompact } from '../../lib/format';
+import { getPostImage, initials } from '../../lib/format';
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
-  ChevronRight,
-  Code2,
-  Eye,
-  Filter,
-  Handshake,
   Loader2,
-  MessageSquare,
-  Play,
-  Search,
   Sparkles,
-  ThumbsDown,
-  ThumbsUp,
   X,
   Send,
-  Zap,
   Heart,
-  Coins,
-  Award,
-  Users,
-  Compass,
   TrendingUp,
-  Sliders,
-  Bookmark
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -46,11 +28,10 @@ const formatStageLabel = (stage) => {
 export default function PitchFeed() {
   const { isAuthenticated } = useAuthStore();
   const [pitches, setPitches] = useState([]);
-  const [meta, setMeta] = useState(null);
   const [search, setSearch] = useState('');
   const [industry, setIndustry] = useState('All');
   const [stage, setStage] = useState('');
-  const [sort, setSort] = useState('trending');
+  const [sort] = useState('trending');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -73,23 +54,22 @@ export default function PitchFeed() {
     per_page: 24,
   }), [industry, search, sort, stage]);
 
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     setIsLoading(true);
     setError('');
     try {
       const { data } = await getPosts(params);
       setPitches(data.data ?? []);
-      setMeta(data.meta ?? null);
     } catch {
       setError('Could not load pitches right now. Please check that the Laravel API is running.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params]);
 
   useEffect(() => {
     loadPosts();
-  }, [params]);
+  }, [loadPosts]);
 
   // Deterministic Mock Seeks/Target Generator based on pitch ID & stage
   const getMockTargetAmount = (pitch) => {
@@ -231,7 +211,7 @@ export default function PitchFeed() {
       }
 
       toast.success(data.message);
-    } catch (err) {
+    } catch {
       toast.error('Bookmark update failed.');
     }
   };
@@ -841,12 +821,9 @@ function VerticalPitchCard({
   commitment, 
   daysLeft, 
   formatMockAmount, 
-  handleBookmarkToggle, 
-  handleInlineVote, 
   openQuickView 
 }) {
   const cover = getPostImage(pitch);
-  const totalScore = pitch.weighted_score ?? ((pitch.upvotes_count ?? 0) - (pitch.downvotes_count ?? 0));
   
   return (
     <article className="group relative flex flex-col border border-black/5 bg-white/80 backdrop-blur-md overflow-hidden shadow-sm hover:shadow-md hover:border-[#FF5C00]/30 transition-all rounded-2xl duration-300">
@@ -931,7 +908,6 @@ function VerticalPitchCard({
   );
 }
 
-// ==================== SUB-COMPONENT: HORIZONTAL NEOPITCH CARD ====================
 function HorizontalPitchCard({
   pitch,
   targetAmt,
@@ -939,11 +915,9 @@ function HorizontalPitchCard({
   daysLeft,
   formatMockAmount,
   handleBookmarkToggle,
-  handleInlineVote,
   openQuickView
 }) {
   const cover = getPostImage(pitch);
-  const totalScore = pitch.weighted_score ?? ((pitch.upvotes_count ?? 0) - (pitch.downvotes_count ?? 0));
   
   return (
     <article className="group relative flex flex-col md:flex-row border border-black/5 bg-white/80 backdrop-blur-md overflow-hidden shadow-sm hover:shadow-md hover:border-[#FF5C00]/30 transition-all rounded-2xl min-h-[220px] duration-300">

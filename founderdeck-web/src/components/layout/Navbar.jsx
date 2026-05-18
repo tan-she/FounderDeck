@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Bell, Menu, UserCircle, LogOut, LayoutDashboard, X, UserPen } from 'lucide-react';
+import { Bell, Menu, LogOut, LayoutDashboard, X, UserPen } from 'lucide-react';
 import UserAvatar from '../ui/UserAvatar';
 
 export default function Navbar() {

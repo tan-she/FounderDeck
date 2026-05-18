@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Presentation, MessageSquare, Mail, LayoutDashboard, LogOut } from 'lucide-react';
-import { initials } from '../../lib/format';
+
 import UserAvatar from '../../components/ui/UserAvatar';
 
 export default function EntrepreneurLayout() {

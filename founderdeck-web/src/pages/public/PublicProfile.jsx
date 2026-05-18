@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../../api/axios';
-import { formatStage, initials, numberCompact } from '../../lib/format';
+import { formatStage, numberCompact } from '../../lib/format';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserAvatar from '../../components/ui/UserAvatar';
 import { 
@@ -30,7 +30,7 @@ export default function PublicProfile() {
   const [syncStatus, setSyncStatus] = useState('');
   const [error, setError] = useState('');
 
-  const fetchProfile = (isMounted = true) => {
+  const fetchProfile = useCallback((isMounted = true) => {
     if (isMounted) setIsLoading(true);
     api.get(`/profile/${id}`)
       .then(({ data }) => {
@@ -44,7 +44,7 @@ export default function PublicProfile() {
       .finally(() => {
         if (isMounted) setIsLoading(false);
       });
-  };
+  }, [id]);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,7 +52,7 @@ export default function PublicProfile() {
     return () => {
       isMounted = false;
     };
-  }, [id]);
+  }, [fetchProfile]);
 
   const handleSyncLinkedIn = async () => {
     setIsSyncing(true);
@@ -70,7 +70,7 @@ export default function PublicProfile() {
             const { data } = await api.post('/profile/sync-linkedin');
             setProfile(data.data);
             toast.success(data.message || 'LinkedIn credentials synchronized!');
-          } catch (err) {
+          } catch {
             toast.error('Sync failed. Please try again.');
           } finally {
             setIsSyncing(false);

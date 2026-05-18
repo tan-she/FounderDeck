@@ -1,8 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
-import { initials } from '../../lib/format';
+
 import UserAvatar from '../../components/ui/UserAvatar';
-import { Handshake, LayoutDashboard, LogOut, Mail, MessageSquare } from 'lucide-react';
+import { Handshake, LayoutDashboard, LogOut, Mail } from 'lucide-react';
 
 export default function InvestorLayout() {
   const { user, logout } = useAuthStore();

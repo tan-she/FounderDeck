@@ -27,6 +27,13 @@ export default function EditProfile() {
   const isGoogleUser = !!user?.google_id;
 
   // Load current profile data
+  const resolveAvatar = (avatar) => {
+    if (!avatar) return null;
+    if (avatar.startsWith("http")) return avatar; // Google URL
+    const baseUrl = API_BASE_URL.replace('/api', '');
+    return `${baseUrl}/storage/${avatar}`; // stored file
+  };
+
   useEffect(() => {
     getMyProfile()
       .then((profile) => {
@@ -43,12 +50,6 @@ export default function EditProfile() {
       .finally(() => setFetching(false));
   }, []);
 
-  const resolveAvatar = (avatar) => {
-    if (!avatar) return null;
-    if (avatar.startsWith("http")) return avatar; // Google URL
-    const baseUrl = API_BASE_URL.replace('/api', '');
-    return `${baseUrl}/storage/${avatar}`; // stored file
-  };
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

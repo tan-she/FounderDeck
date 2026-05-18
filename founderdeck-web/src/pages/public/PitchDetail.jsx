@@ -8,8 +8,6 @@ import { mediaUrl } from '../../utils/mediaUrl';
 import UserAvatar from '../../components/ui/UserAvatar';
 import VideoPlayer from '../../components/ui/VideoPlayer';
 import {
-  ArrowLeft,
-  ArrowRight,
   ArrowUpRight,
   Code2,
   Loader2,
@@ -18,8 +16,6 @@ import {
   Play,
   Send,
   Sparkles,
-  ThumbsDown,
-  ThumbsUp,
   Trash2,
   UserPlus,
   Heart,
@@ -117,7 +113,7 @@ export default function PitchDetail() {
         is_bookmarked: data.is_bookmarked,
       }));
       toast.success(data.message);
-    } catch (err) {
+    } catch {
       toast.error('Bookmark update failed.');
     }
   };
@@ -184,19 +180,7 @@ export default function PitchDetail() {
     }
   };
 
-  // Convert standard URLs to active embeds
-  const getEmbedUrl = (url) => {
-    if (!url) return null;
-    let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    let match = url.match(regExp);
-    if (match && match[2].length === 11) {
-      return `https://www.youtube.com/embed/${match[2]}`;
-    }
-    if (url.includes('loom.com/share/')) {
-      return url.replace('loom.com/share/', 'loom.com/embed/');
-    }
-    return url;
-  };
+
 
   if (isLoading) {
     return (
