@@ -6,7 +6,7 @@ databases:
 services:
   - type: web
     name: founderdeck-api
-    runtime: php
+    runtime: docker
     plan: free
     rootDir: founderdeck-api
     buildCommand: composer install --no-dev --optimize-autoloader
