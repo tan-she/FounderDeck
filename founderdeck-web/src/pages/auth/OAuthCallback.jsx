@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Loader2 } from 'lucide-react';
 
+import api from '../../api/axios';
+
 export default function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -12,29 +14,35 @@ export default function OAuthCallback() {
     const token = searchParams.get('token');
     
     if (token) {
-      // Store token
-      localStorage.setItem('token', token);
-      
-      // Update store and hydrate user data
-      const initializeAuth = async () => {
-        await hydrateFromStorage();
-        
-        // After hydration, the user object will be in the store
-        // We can redirect them to the dashboard based on their role
-        const store = useAuthStore.getState();
-        const role = store.user?.role;
-        
-        if (role === 'investor') {
-          navigate('/dashboard/investor', { replace: true });
-        } else if (role === 'super_admin') {
-          navigate('/admin/dashboard', { replace: true });
-        } else {
-          // Default to entrepreneur for new Google signups
-          navigate('/dashboard/entrepreneur', { replace: true });
-        }
-      };
+      // Read the role the user picked on the Register page
+      const intendedRole = localStorage.getItem("oauth_intended_role") || "investor";
+      localStorage.removeItem("oauth_intended_role"); // clean up
 
-      initializeAuth();
+      // Send token + role to backend to finalize account
+      api.post('/auth/google/finalize', { token, role: intendedRole })
+        .then(({ data }) => {
+          // Store the real Sanctum token
+          localStorage.setItem('token', data.token);
+          
+          // Update store and hydrate user data
+          const initializeAuth = async () => {
+            await hydrateFromStorage();
+            
+            const store = useAuthStore.getState();
+            const role = store.user?.role;
+            
+            if (role === 'investor') {
+              navigate('/dashboard/investor', { replace: true });
+            } else if (role === 'super_admin') {
+              navigate('/admin/dashboard', { replace: true });
+            } else {
+              navigate('/dashboard/entrepreneur', { replace: true });
+            }
+          };
+
+          initializeAuth();
+        })
+        .catch(() => navigate('/login?error=auth_failed'));
     } else {
       // No token found, redirect to login with error
       navigate('/login?error=auth_failed');

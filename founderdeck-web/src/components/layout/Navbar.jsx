@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Bell, Menu, UserCircle, LogOut, LayoutDashboard, X } from 'lucide-react';
+import { Bell, Menu, UserCircle, LogOut, LayoutDashboard, X, UserPen } from 'lucide-react';
+import UserAvatar from '../ui/UserAvatar';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,12 +52,15 @@ export default function Navbar() {
                 </Link>
                 <div className="relative group">
                   <button className="flex items-center space-x-2 text-gray-700 hover:text-black font-semibold text-sm">
-                    <UserCircle className="w-6 h-6 text-gray-600" />
+                    <UserAvatar src={user?.avatar_url} name={user?.name} size="sm" />
                     <span>{user?.name || 'Account'}</span>
                   </button>
                   <div className="absolute right-0 w-48 mt-2 py-2 bg-white border border-black/5 rounded-xl shadow-xl shadow-black/[0.05] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                     <Link to={getDashboardLink()} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
                       <LayoutDashboard className="w-4 h-4 mr-2 text-gray-500" /> Dashboard
+                    </Link>
+                    <Link to="/profile/edit" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 font-medium">
+                      <UserPen className="w-4 h-4 mr-2 text-gray-500 group-hover:text-orange-600" /> Edit Profile
                     </Link>
                     <button onClick={handleLogout} className="w-full flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50 font-semibold">
                       <LogOut className="w-4 h-4 mr-2" /> Sign Out
@@ -93,6 +97,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link onClick={() => setIsOpen(false)} to={getDashboardLink()} className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Dashboard</Link>
+                <Link onClick={() => setIsOpen(false)} to="/profile/edit" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Edit Profile</Link>
                 <Link onClick={() => setIsOpen(false)} to="/notifications" className="text-sm font-semibold text-gray-700 hover:text-[#FF5C00] transition">Notifications</Link>
                 <button onClick={handleLogout} className="text-left text-sm font-semibold text-red-500 hover:text-red-600 transition">Sign Out</button>
               </>

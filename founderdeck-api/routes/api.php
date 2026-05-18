@@ -27,6 +27,7 @@ Route::prefix('auth')->group(function () {
 
     Route::get('/google/redirect', [AuthController::class, 'googleRedirect']);
     Route::get('/google/callback', [AuthController::class, 'googleCallback']);
+    Route::post('/google/finalize', [AuthController::class, 'finalizeGoogleAuth']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -62,7 +63,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:entrepreneur');
 
     // ── AI Services (Entrepreneur only) ──────────────────────
-    Route::post('/ai/enhance-pitch', [AiController::class, 'enhancePitch'])
+    Route::post('/ai/generate-oneliner', [AiController::class, 'generateOneLiner'])
+        ->middleware('role:entrepreneur');
+    Route::post('/ai/enhance-description', [AiController::class, 'enhanceDescription'])
         ->middleware('role:entrepreneur');
 
     // ── Votes ───────────────────────────────────────────────
@@ -102,6 +105,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
 
     // ── Profile ─────────────────────────────────────────────
+    Route::get('/profile/me', [ProfileController::class, 'getMyProfile']);
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile']);
     Route::patch('/profile', [ProfileController::class, 'update']);
     Route::post('/profile/sync-linkedin', [ProfileController::class, 'syncLinkedin']);
 

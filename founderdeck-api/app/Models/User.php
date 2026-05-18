@@ -23,6 +23,7 @@ class User extends Authenticatable
         'role',
         'avatar_url',
         'bio',
+        'phone',
         'linkedin_url',
         'github_url',
         'google_id',

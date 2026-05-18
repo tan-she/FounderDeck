@@ -107,28 +107,67 @@ class AuthController extends Controller
      */
     public function googleCallback(): \Illuminate\Http\RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            $frontendUrl = config('app.frontend_url', 'http://localhost:5173');
+            return redirect("{$frontendUrl}/register?error=google_failed");
+        }
 
-        $user = User::where('email', $googleUser->getEmail())->first();
+        $frontendUrl = config('app.frontend_url', 'http://localhost:5173');
+        $token = encrypt(json_encode([
+            'google_id'  => $googleUser->getId(),
+            'name'       => $googleUser->getName(),
+            'email'      => $googleUser->getEmail(),
+            'avatar'     => $googleUser->getAvatar(),
+            'expires_at' => now()->addMinutes(5)->timestamp,
+        ]));
+
+        return redirect("{$frontendUrl}/auth/google/callback?token=" . urlencode($token));
+    }
+
+    /**
+     * Finalize Google Auth by decrypting the temporary token and creating/logging in the user with their intended role.
+     */
+    public function finalizeGoogleAuth(Request $request): JsonResponse
+    {
+        $request->validate([
+            'token' => 'required|string',
+            'role'  => 'required|in:entrepreneur,investor',
+        ]);
+
+        try {
+            $data = json_decode(decrypt($request->token), true);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid or expired token'], 422);
+        }
+
+        if (now()->timestamp > $data['expires_at']) {
+            return response()->json(['message' => 'Token expired, please try again'], 422);
+        }
+
+        $user = User::where('email', $data['email'])->first();
 
         if ($user) {
             // Existing user — link Google ID if not already linked
             if (!$user->google_id) {
-                $user->update(['google_id' => $googleUser->getId()]);
+                $user->update(['google_id' => $data['google_id']]);
             }
 
             if ($user->is_banned) {
-                $frontendUrl = config('app.frontend_url', 'http://localhost:5173');
-                return redirect("{$frontendUrl}/login?error=banned&reason=" . urlencode($user->ban_reason ?? ''));
+                return response()->json([
+                    'message' => 'Your account has been banned.',
+                    'reason' => $user->ban_reason,
+                ], 403);
             }
         } else {
-            // New user — create with default role 'investor'
+            // New user — create with the role chosen by the user on the frontend
             $user = User::create([
-                'name' => $googleUser->getName(),
-                'email' => $googleUser->getEmail(),
-                'google_id' => $googleUser->getId(),
-                'avatar_url' => $googleUser->getAvatar(),
-                'role' => 'investor',
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'google_id' => $data['google_id'],
+                'avatar_url' => $data['avatar'],
+                'role' => $request->role,
                 'profile_completed' => false,
                 'email_verified_at' => now(),
             ]);
@@ -136,11 +175,12 @@ class AuthController extends Controller
             Mail::to($user->email)->queue(new WelcomeMail($user));
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $authToken = $user->createToken('auth_token')->plainTextToken;
 
-        $frontendUrl = config('app.frontend_url', 'http://localhost:5173');
-
-        return redirect("{$frontendUrl}/auth/callback?token={$token}");
+        return response()->json([
+            'user'  => new UserResource($user),
+            'token' => $authToken,
+        ]);
     }
 
     /**

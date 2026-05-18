@@ -30,6 +30,7 @@ class Post extends Model
         'github_repo_url',
         'is_published',
         'views_count',
+        'deck_files',
     ];
 
     protected function casts(): array
@@ -37,6 +38,7 @@ class Post extends Model
         return [
             'tech_stack' => 'array',
             'slides' => 'array',
+            'deck_files' => 'array',
             'is_published' => 'boolean',
             'views_count' => 'integer',
         ];

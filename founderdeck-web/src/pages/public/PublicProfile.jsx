@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import api from '../../api/axios';
 import { formatStage, initials, numberCompact } from '../../lib/format';
 import { useAuthStore } from '../../store/useAuthStore';
+import UserAvatar from '../../components/ui/UserAvatar';
 import { 
   BriefcaseBusiness, 
   Code2, 
@@ -104,9 +105,12 @@ export default function PublicProfile() {
       <section className="border-b border-black/5 bg-white shadow-sm">
         <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-start lg:px-8">
           <div className="relative shrink-0">
-            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#FF5C00]/10 text-3xl font-bold text-[#FF5C00] border-2 border-[#FF5C00]/20 shadow-inner">
-              {profile.avatar_url ? <img src={profile.avatar_url} alt={profile.name} className="h-full w-full object-cover" /> : initials(profile.name)}
-            </div>
+            <UserAvatar 
+              src={profile.avatar_url} 
+              name={profile.name} 
+              size="xl" 
+              className="border-2 border-[#FF5C00]/20 shadow-inner"
+            />
             {profile.is_linkedin_verified && (
               <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white border-2 border-white shadow" title="LinkedIn Verified Credentials">
                 <CheckCircle2 className="h-4 w-4" />

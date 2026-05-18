@@ -4,6 +4,9 @@ import api from '../../api/axios';
 import { getPost } from '../../api/posts';
 import { useAuthStore } from '../../store/useAuthStore';
 import { formatStage, getPostImage, initials, numberCompact } from '../../lib/format';
+import { mediaUrl } from '../../utils/mediaUrl';
+import UserAvatar from '../../components/ui/UserAvatar';
+import VideoPlayer from '../../components/ui/VideoPlayer';
 import {
   ArrowLeft,
   ArrowRight,
@@ -242,9 +245,7 @@ export default function PitchDetail() {
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <Link to={`/profile/${pitch.user?.id}`} className="inline-flex items-center gap-3 rounded-2xl border border-black/5 bg-white px-4 py-2.5 transition hover:border-[#FF5C00]/40 shadow-sm">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF5C00]/15 text-sm font-bold text-[#FF5C00]">
-                  {initials(pitch.user?.name)}
-                </span>
+                <UserAvatar src={pitch.user?.avatar_url} name={pitch.user?.name} size="md" />
                 <span>
                   <span className="block text-sm font-bold text-gray-800">{pitch.user?.name ?? 'Founder'}</span>
                   <span className="block text-xs text-gray-400 font-semibold">View founder profile</span>
@@ -309,23 +310,38 @@ export default function PitchDetail() {
               <h2 className="text-xl font-display font-black text-[#111111] flex items-center gap-1.5">
                 <Play className="h-4 w-4 text-[#FF5C00] fill-current" /> Elevator Pitch video
               </h2>
-              <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/5 bg-gray-50">
-                <iframe
-                  src={getEmbedUrl(pitch.video_url)}
-                  title="Elevator Pitch Video"
-                  className="h-full w-full border-none"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+              <VideoPlayer src={pitch.video_url} />
             </article>
           )}
 
           {/* Slides Carousel */}
-          {pitch.slides && pitch.slides.length > 0 && (
+          {pitch.deck_files && pitch.deck_files.length > 0 && (
             <article className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm space-y-4">
               <h2 className="text-xl font-display font-black text-[#111111]">Pitch Deck Slides</h2>
-              <SlideCarousel slides={pitch.slides} />
+              <div className="space-y-4">
+                {pitch.deck_files.map((file, i) => {
+                  const isPdf = file.endsWith(".pdf");
+                  return isPdf ? (
+                    <a
+                      key={i}
+                      href={mediaUrl(file)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 p-3 border border-black/5 rounded-lg hover:bg-[#F4F4F4] text-sm text-gray-700 font-semibold transition"
+                    >
+                      📄 Slide deck {i + 1} — Open PDF ↗
+                    </a>
+                  ) : (
+                    <img
+                      key={i}
+                      src={mediaUrl(file)}
+                      alt={`Slide ${i + 1}`}
+                      className="w-full rounded-xl border border-black/5 shadow-sm"
+                      loading="lazy"
+                    />
+                  );
+                })}
+              </div>
             </article>
           )}
 
@@ -395,9 +411,7 @@ export default function PitchDetail() {
                   <article key={item.id} className="rounded-xl border border-black/5 bg-[#F4F4F4] p-4">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FF5C00]/10 text-xs font-bold text-[#FF5C00]">
-                          {initials(item.user?.name)}
-                        </span>
+                        <UserAvatar src={item.user?.avatar_url} name={item.user?.name} size="md" />
                         <div>
                           <p className="text-sm font-bold text-gray-800">{item.user?.name ?? 'Member'}</p>
                           <p className="text-xs text-gray-400 font-semibold">{new Date(item.created_at).toLocaleDateString()}</p>
@@ -596,15 +610,6 @@ export default function PitchDetail() {
               </div>
             )}
 
-            {isAuthenticated && !isOwner && collabStatus !== 'accepted' && (
-              <Link
-                to={`/messages?user=${pitch.user?.id}`}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-[#F4F4F4]/50 px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:border-[#FF5C00]/40"
-              >
-                <MessageSquare className="h-4 w-4" />
-                Message Founder
-              </Link>
-            )}
           </div>
         </aside>
       </section>
@@ -612,54 +617,4 @@ export default function PitchDetail() {
   );
 }
 
-// ── Slide Deck Sub-Carousel Component ──────────────────
-function SlideCarousel({ slides }) {
-  const [slideIndex, setSlideIndex] = useState(0);
 
-  if (!slides || slides.length === 0) return null;
-
-  return (
-    <div className="relative rounded-xl border border-black/5 overflow-hidden group">
-      <div className="h-64 bg-gray-950 flex items-center justify-center">
-        <img
-          src={slides[slideIndex]}
-          alt={`Slide ${slideIndex + 1}`}
-          className="h-full w-full object-contain"
-        />
-      </div>
-
-      {slides.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={() => setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white text-gray-800 p-1.5 transition-all shadow-md border border-black/5 cursor-pointer"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white text-gray-800 p-1.5 transition-all shadow-md border border-black/5 cursor-pointer"
-          >
-            <ArrowRight className="h-4 w-4" />
-          </button>
-
-          <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-1.5">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setSlideIndex(idx)}
-                className={`h-2 w-2 rounded-full transition-all ${
-                  idx === slideIndex ? 'bg-[#FF5C00] w-3' : 'bg-white/60 hover:bg-white'
-                }`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}

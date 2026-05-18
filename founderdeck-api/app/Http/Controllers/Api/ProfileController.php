@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -97,5 +99,52 @@ class ProfileController extends Controller
             'data' => new UserResource($user),
             'message' => 'LinkedIn profile integration successfully synced!',
         ]);
+    }
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name'         => 'sometimes|string|max:100',
+            'bio'          => 'nullable|string|max:500',
+            'phone'        => 'nullable|string|max:20',
+            'linkedin_url' => 'nullable|url|max:255',
+            'github_url'   => 'nullable|url|max:255',
+            // Email update only allowed for non-Google users
+            'email'        => [
+                'sometimes', 'email', 'max:255',
+                Rule::unique('users')->ignore($user->id),
+                // Block email change if account is Google-linked
+                function ($attribute, $value, $fail) use ($user) {
+                    if ($user->google_id && $value !== $user->email) {
+                        $fail('Email cannot be changed for Google-linked accounts.');
+                    }
+                },
+            ],
+            'avatar' => 'nullable|file|mimetypes:image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,image/avif|max:2048', // 2MB
+        ]);
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if it's a stored file (not a Google URL)
+            if ($user->avatar_url && !str_starts_with($user->avatar_url, 'http')) {
+                Storage::disk('public')->delete($user->avatar_url);
+            }
+
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar_url'] = $path; // store relative path
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'user'    => new UserResource($user->fresh()),
+        ]);
+    }
+
+    public function getMyProfile(Request $request)
+    {
+        return response()->json(new UserResource($request->user()));
     }
 }

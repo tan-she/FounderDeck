@@ -38,6 +38,7 @@ const SentCollabs = lazy(() => import('./pages/investor/SentCollabs'));
 // Shared Pages
 const Messages = lazy(() => import('./pages/shared/Messages'));
 const Notifications = lazy(() => import('./pages/shared/Notifications'));
+const EditProfile = lazy(() => import('./pages/shared/EditProfile'));
 
 // Admin Pages
 const AdminOverview = lazy(() => import('./pages/admin/AdminOverview'));
@@ -90,6 +91,7 @@ export default function App() {
           
           {/* Protected Common Routes */}
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+          <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           {/* /messages → redirect to role-appropriate dashboard messages */}
           <Route path="/messages" element={<ProtectedRoute><MessagesRedirect /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />

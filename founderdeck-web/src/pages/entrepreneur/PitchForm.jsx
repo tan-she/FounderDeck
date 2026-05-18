@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createPost, getPost, updatePost, enhancePitch } from '../../api/posts';
+import { createPost, getPost, updatePost } from '../../api/posts';
+import { generateOneLiner, enhanceDescription } from '../../api/ai';
 import { ArrowLeft, Code2, Image, Link2, Loader2, Play, Rocket, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import DeckUploader from '../../components/pitch/DeckUploader';
 
 const optionalUrl = z.string().trim().url('Enter a valid URL').or(z.literal('')).optional();
 
@@ -36,7 +38,6 @@ const defaultValues = {
   tags: '',
   cover_image_url: '',
   video_url: '',
-  slides: '',
   demo_url: '',
   github_repo_url: '',
 };
@@ -55,6 +56,11 @@ export default function PitchForm() {
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  
+  const [deckFiles, setDeckFiles] = useState([]);
+  const [removedDeck, setRemovedDeck] = useState([]);
+  const [existingDeckFiles, setExistingDeckFiles] = useState([]);
+  const [coverImageFile, setCoverImageFile] = useState(null);
 
   const {
     register,
@@ -62,6 +68,7 @@ export default function PitchForm() {
     reset,
     watch,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(pitchSchema),
@@ -70,61 +77,51 @@ export default function PitchForm() {
 
   const handleEnhance = async () => {
     const currentContent = watch('description');
-    if (!currentContent || currentContent.trim().length < 10) {
-      toast.error('Please enter at least a few rough notes or a brief description before enhancing.');
+    if (!currentContent || currentContent.trim().length < 50) {
+      toast.error('Write at least 50 characters in Full Pitch first.');
       return;
     }
 
     setIsEnhancing(true);
     try {
-      const response = await enhancePitch({
-        field: 'description',
-        content: currentContent
+      const { description } = await enhanceDescription({
+        title: watch('title'),
+        description: currentContent,
+        industry: watch('industry')
       });
 
-      if (response.data && response.data.enhanced_content) {
-        setValue('description', response.data.enhanced_content, { shouldValidate: true, shouldDirty: true });
-        toast.success('Pitch enhanced successfully!');
-      } else {
-        toast.error('AI response did not return expected content.');
-      }
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to enhance pitch with AI.';
-      toast.error(message);
+      setValue('description', description, { shouldValidate: true, shouldDirty: true });
+      toast.success('Description enhanced!');
+    } catch (err) {
+      const msg = err.response?.data?.message ?? 'Enhancement failed.';
+      toast.error(msg);
     } finally {
       setIsEnhancing(false);
     }
   };
 
-  // Generate automated AI summary from Pitch description
+  // Generate automated AI summary from Pitch description or tagline
   const handleGenerateSummary = async () => {
-    const currentDescription = watch('description');
-    if (!currentDescription || currentDescription.trim().length < 20) {
-      toast.error('Please fill in a brief description before generating a summary.');
+    const title = watch('title');
+    if (!title) {
+      toast.error("Please enter a Startup Name first.");
       return;
     }
 
     setIsGeneratingSummary(true);
     try {
-      const response = await enhancePitch({
-        field: 'one_liner_summary',
-        content: currentDescription
+      const { summary } = await generateOneLiner({
+        title,
+        tagline: watch('tagline'),
+        description: watch('description'),
+        industry: watch('industry'),
       });
 
-      if (response.data && response.data.enhanced_content) {
-        setValue('one_liner_summary', response.data.enhanced_content.substring(0, 250), { shouldValidate: true, shouldDirty: true });
-        toast.success('Summary generated successfully!');
-      } else {
-        // High fidelity fallback summary calculation
-        const fallback = currentDescription.split(/[.!?]/).filter(Boolean)[0] || 'Interactive platform for startup ecosystems.';
-        setValue('one_liner_summary', fallback.substring(0, 150) + '...', { shouldValidate: true, shouldDirty: true });
-        toast.success('distilled summary generated!');
-      }
-    } catch {
-      // High fidelity fallback summary calculation
-      const fallback = currentDescription.split(/[.!?]/).filter(Boolean)[0] || 'Interactive platform for startup ecosystems.';
-      setValue('one_liner_summary', fallback.substring(0, 150) + '...', { shouldValidate: true, shouldDirty: true });
-      toast.success('distilled summary generated!');
+      setValue('one_liner_summary', summary, { shouldValidate: true, shouldDirty: true });
+      toast.success("One-liner generated!");
+    } catch (err) {
+      const msg = err.response?.data?.message ?? "AI generation failed.";
+      toast.error(msg);
     } finally {
       setIsGeneratingSummary(false);
     }
@@ -153,10 +150,10 @@ export default function PitchForm() {
           tags: joinList(pitchData.tags ?? []),
           cover_image_url: pitchData.cover_image_url ?? '',
           video_url: pitchData.video_url ?? '',
-          slides: (pitchData.slides ?? []).join(', '),
           demo_url: pitchData.demo_url ?? '',
           github_repo_url: pitchData.github_repo_url ?? '',
         });
+        setExistingDeckFiles(pitchData.deck_files ?? []);
       })
       .catch(() => {
         toast.error('Could not load this pitch for editing.');
@@ -172,24 +169,37 @@ export default function PitchForm() {
   }, [id, isEditing, navigate, reset]);
 
   const onSubmit = async (data) => {
-    const payload = {
-      ...data,
-      tech_stack: splitList(data.tech_stack),
-      tags: splitList(data.tags),
-      slides: splitList(data.slides),
-      cover_image_url: data.cover_image_url || null,
-      video_url: data.video_url || null,
-      one_liner_summary: data.one_liner_summary || null,
-      demo_url: data.demo_url || null,
-      github_repo_url: data.github_repo_url || null,
-    };
+    const formData = new FormData();
+    
+    // Append standard fields
+    Object.keys(data).forEach((key) => {
+      if (['tech_stack', 'tags', 'slides', 'cover_image_url'].includes(key)) return;
+      if (data[key]) formData.append(key, data[key]);
+    });
+
+    const techStack = splitList(data.tech_stack);
+    techStack.forEach((item) => formData.append("tech_stack[]", item));
+
+    const tags = splitList(data.tags);
+    tags.forEach((item) => formData.append("tags[]", item));
+
+    deckFiles.forEach((f) => formData.append("deck_slides[]", f));
+    removedDeck.forEach((p) => formData.append("remove_deck_slides[]", p));
+
+    if (coverImageFile) {
+      formData.append("cover_image", coverImageFile);
+    }
+
+    if (isEditing) {
+      formData.append("_method", "PATCH");
+    }
 
     try {
       if (isEditing) {
-        await updatePost(id, payload);
+        await updatePost(id, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Pitch updated successfully');
       } else {
-        await createPost(payload);
+        await createPost(formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Pitch published successfully');
       }
       navigate('/dashboard/entrepreneur/pitches');
@@ -260,14 +270,19 @@ export default function PitchForm() {
                   type="button"
                   onClick={handleGenerateSummary}
                   disabled={isGeneratingSummary}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5C00]/10 border border-[#FF5C00]/20 px-3 py-1.5 text-xs font-bold text-[#FF5C00] hover:bg-[#FF5C00]/20 transition-all disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5C00]/10 border border-[#FF5C00]/20 px-3 py-1.5 text-xs font-bold text-[#FF5C00] hover:bg-[#FF5C00]/20 transition-all disabled:opacity-50 disabled:cursor-wait"
                 >
                   {isGeneratingSummary ? (
-                    <Loader2 className="h-3 w-3 animate-spin text-[#FF5C00]" />
+                    <>
+                      <span className="animate-spin inline-block w-3 h-3 border-2 border-[#FF5C00] border-t-transparent rounded-full" />
+                      <span>Generating...</span>
+                    </>
                   ) : (
-                    <Sparkles className="h-3 w-3" />
+                    <>
+                      <Sparkles className="h-3 w-3" />
+                      <span>Auto-Generate One-Liner</span>
+                    </>
                   )}
-                  <span>Auto-Generate One-Liner</span>
                 </button>
               </div>
               <input
@@ -312,12 +327,12 @@ export default function PitchForm() {
                   type="button"
                   onClick={handleEnhance}
                   disabled={isEnhancing}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5C00]/10 border border-[#FF5C00]/20 px-4 py-2 text-xs font-bold text-[#FF5C00] hover:bg-[#FF5C00]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5C00]/10 border border-[#FF5C00]/20 px-4 py-2 text-xs font-bold text-[#FF5C00] hover:bg-[#FF5C00]/20 transition-all disabled:opacity-50 disabled:cursor-wait cursor-pointer"
                 >
                   {isEnhancing ? (
                     <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#FF5C00]" />
-                      <span>Enhancing...</span>
+                      <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-[#FF5C00] border-t-transparent rounded-full" />
+                      <span>Enhancing... (may take ~30s)</span>
                     </>
                   ) : (
                     <>
@@ -378,26 +393,44 @@ export default function PitchForm() {
             </label>
 
             {/* Pitch Deck Slide Preview URLs */}
-            <label className="md:col-span-2">
-              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700">
-                <Image className="h-4 w-4" /> Pitch Deck Slide Preview URLs (Comma-separated Image Links)
-              </span>
-              <input
-                {...register('slides')}
-                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
-                placeholder="https://image1.jpg, https://image2.jpg, https://image3.jpg"
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Pitch Deck Slides
+              </label>
+              <DeckUploader
+                existingFiles={existingDeckFiles}
+                onChange={(files, removed) => {
+                  setDeckFiles(files);
+                  setRemovedDeck(removed);
+                }}
               />
-              {errors.slides && <p className="mt-2 text-sm font-semibold text-red-500">{errors.slides.message}</p>}
-            </label>
+            </div>
 
             <label>
-              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700"><Image className="h-4 w-4" /> Cover Image URL</span>
-              <input
-                {...register('cover_image_url')}
-                className="appearance-none block w-full px-3 py-2.5 border border-black/5 bg-[#F4F4F4] rounded-xl placeholder-gray-400 text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-[#FF5C00] focus:border-[#FF5C00] transition-shadow sm:text-sm"
-                placeholder="https://..."
-              />
-              {errors.cover_image_url && <p className="mt-2 text-sm font-semibold text-red-500">{errors.cover_image_url.message}</p>}
+              <span className="mb-2 flex items-center gap-2 text-sm font-bold text-gray-700">
+                <Image className="h-4 w-4" /> Cover Image
+              </span>
+              <div className="relative overflow-hidden rounded-xl border border-dashed border-black/20 bg-[#F4F4F4] transition-all hover:bg-gray-50 flex flex-col items-center justify-center p-6 text-center">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setCoverImageFile(e.target.files[0]);
+                    }
+                  }}
+                  className="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer"
+                />
+                {coverImageFile ? (
+                  <div className="text-sm font-bold text-gray-700">{coverImageFile.name}</div>
+                ) : getValues('cover_image_url') ? (
+                  <div className="text-sm font-bold text-gray-700">Current cover image exists. Upload to replace.</div>
+                ) : (
+                  <div className="text-sm font-bold text-gray-500">
+                    <span className="text-[#FF5C00]">Upload image</span> (Max 5MB)
+                  </div>
+                )}
+              </div>
             </label>
 
             <label>

@@ -2,6 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Presentation, MessageSquare, Mail, LayoutDashboard, LogOut } from 'lucide-react';
 import { initials } from '../../lib/format';
+import UserAvatar from '../../components/ui/UserAvatar';
 
 export default function EntrepreneurLayout() {
   const { user, logout } = useAuthStore();
@@ -26,13 +27,7 @@ export default function EntrepreneurLayout() {
       <aside className="z-20 flex h-auto w-full flex-col border-b border-black/5 bg-[#F4F4F4] md:sticky md:top-16 md:h-[calc(100vh-64px)] md:w-64 md:border-b-0 md:border-r">
         <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
-            {user?.avatar_url ? (
-              <img src={user.avatar_url} alt={user.name} className="w-10 h-10 rounded-full bg-gray-200" />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-[#FF5C00] text-white flex items-center justify-center font-bold">
-                {initials(user?.name)}
-              </div>
-            )}
+            <UserAvatar src={user?.avatar_url} name={user?.name} size="md" />
             <div>
               <p className="font-semibold text-sm truncate w-32 text-[#111111]">{user?.name}</p>
               <p className="text-xs text-[#FF5C00] font-black font-display uppercase tracking-wider">Founder</p>

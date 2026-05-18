@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { initials } from '../../lib/format';
+import UserAvatar from '../../components/ui/UserAvatar';
 import { Handshake, LayoutDashboard, LogOut, Mail, MessageSquare } from 'lucide-react';
 
 export default function InvestorLayout() {
@@ -17,9 +18,7 @@ export default function InvestorLayout() {
       <aside className="z-20 flex h-auto w-full flex-col border-b border-black/5 bg-[#F4F4F4] md:sticky md:top-16 md:h-[calc(100vh-64px)] md:w-64 md:border-b-0 md:border-r">
         <div className="border-b border-black/5 p-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#FF5C00]/10 font-bold text-[#FF5C00]">
-              {user?.avatar_url ? <img src={user.avatar_url} alt={user.name} className="h-full w-full object-cover" /> : initials(user?.name)}
-            </div>
+            <UserAvatar src={user?.avatar_url} name={user?.name} size="md" />
             <div>
               <p className="w-32 truncate text-sm font-bold text-[#111111]">{user?.name}</p>
               <p className="text-xs font-bold text-[#FF5C00]">Investor</p>

@@ -1,3 +1,5 @@
+import { mediaUrl } from '../utils/mediaUrl';
+
 export const formatStage = (value) => {
   if (!value) return 'Idea';
   return value
@@ -18,4 +20,4 @@ export const initials = (name = 'FD') => name
   .map((word) => word[0]?.toUpperCase())
   .join('') || 'FD';
 
-export const getPostImage = (post) => post?.cover_image_url || null;
+export const getPostImage = (post) => mediaUrl(post?.cover_image_url) || null;

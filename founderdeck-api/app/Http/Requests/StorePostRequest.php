@@ -21,7 +21,7 @@ class StorePostRequest extends FormRequest
             'tech_stack' => ['nullable', 'array'],
             'tech_stack.*' => ['string', 'max:50'],
             'funding_stage' => ['required', 'in:idea,mvp,seed,series_a,looking_for_cofounders'],
-            'cover_image_url' => ['nullable', 'url', 'max:2048'],
+            'cover_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'video_url' => ['nullable', 'url', 'max:2048'],
             'slides' => ['nullable', 'array'],
             'slides.*' => ['url', 'max:2048'],
@@ -30,6 +30,8 @@ class StorePostRequest extends FormRequest
             'github_repo_url' => ['nullable', 'url', 'max:2048'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string', 'max:50'],
+            'deck_slides' => ['nullable', 'array'],
+            'deck_slides.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,webp,pdf', 'max:5120'],
         ];
     }
 }

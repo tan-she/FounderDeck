@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -145,7 +146,23 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request): JsonResponse
     {
-        $post = $request->user()->posts()->create($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('cover_image')) {
+            $path = $request->file('cover_image')->store('pitches/covers', 'public');
+            $validated['cover_image_url'] = $path;
+        }
+
+        $deckFiles = [];
+        if ($request->hasFile('deck_slides')) {
+            foreach ($request->file('deck_slides') as $slide) {
+                $path = $slide->store('pitches/deck', 'public');
+                $deckFiles[] = $path;
+            }
+        }
+        $validated['deck_files'] = $deckFiles;
+
+        $post = $request->user()->posts()->create($validated);
 
         // Handle tags
         if ($request->filled('tags')) {
@@ -171,7 +188,35 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
-        $post->update($request->validated());
+        $validated = $request->validated();
+
+        // Remove selected slides
+        $existingDeck = $post->deck_files ?? [];
+        if ($request->has('remove_deck_slides')) {
+            foreach ($request->remove_deck_slides as $path) {
+                Storage::disk('public')->delete($path);
+                $existingDeck = array_filter($existingDeck, fn($f) => $f !== $path);
+            }
+        }
+
+        // Add new slides
+        if ($request->hasFile('deck_slides')) {
+            foreach ($request->file('deck_slides') as $slide) {
+                $existingDeck[] = $slide->store('pitches/deck', 'public');
+            }
+        }
+
+        if ($request->hasFile('cover_image')) {
+            if ($post->cover_image_url && !str_starts_with($post->cover_image_url, 'http')) {
+                Storage::disk('public')->delete($post->cover_image_url);
+            }
+            $path = $request->file('cover_image')->store('pitches/covers', 'public');
+            $validated['cover_image_url'] = $path;
+        }
+
+        $validated['deck_files'] = array_values($existingDeck);
+
+        $post->update($validated);
 
         // Handle tags if provided
         if ($request->has('tags')) {
