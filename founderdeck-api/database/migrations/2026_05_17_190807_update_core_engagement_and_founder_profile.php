@@ -39,10 +39,11 @@ return new class extends Migration
             $table->unique(['user_id', 'post_id']);
         });
     }
-
+ 
     /**
      * Reverse the migrations.
      */
+
     public function down(): void
     {
         Schema::dropIfExists('bookmarks');

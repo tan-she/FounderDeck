@@ -61,6 +61,7 @@ export default {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
         display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
         pixel: ['Silkscreen', 'Press Start 2P', 'monospace'],
       },
       animation: {
