@@ -1,5 +1,7 @@
 # FounderDeck
 
+[![DevOps CI/CD Pipeline](https://github.com/tan-she/FounderDeck/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/tan-she/FounderDeck/actions/workflows/ci-cd.yml)
+
 A founder-investor matchmaking platform where entrepreneurs publish pitches, investors signal intent, and promising conversations become private collaborations.
 
 Think LinkedIn meets Product Hunt — with real-time voting, AI-assisted pitch writing, and encrypted direct messaging gated behind mutual collaboration requests.
