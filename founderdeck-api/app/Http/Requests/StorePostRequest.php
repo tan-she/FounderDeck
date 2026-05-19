@@ -31,7 +31,7 @@ class StorePostRequest extends FormRequest
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string', 'max:50'],
             'deck_slides' => ['nullable', 'array'],
-            'deck_slides.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,webp,pdf', 'max:5120'],
+            'deck_slides.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,webp,pdf,ppt,pptx', 'max:20480'],
         ];
     }
 }

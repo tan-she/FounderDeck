@@ -50,7 +50,16 @@ export default function DeckUploader({ existingFiles = [], onChange }) {
     onChange(updatedNew, updatedRemove);
   };
 
-  const isPDF = (name = "") => name.toLowerCase().endsWith(".pdf");
+  const isDocument = (name = "") => {
+    const lower = name.toLowerCase();
+    return lower.endsWith(".pdf") || lower.endsWith(".ppt") || lower.endsWith(".pptx");
+  };
+
+  const getDocIcon = (name = "") => {
+    const lower = name.toLowerCase();
+    if (lower.endsWith(".ppt") || lower.endsWith(".pptx")) return "📊";
+    return "📄";
+  };
 
   return (
     <div className="space-y-3">
@@ -59,9 +68,9 @@ export default function DeckUploader({ existingFiles = [], onChange }) {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {previews.map((item, idx) => (
             <div key={idx} className="relative group rounded-lg overflow-hidden border border-gray-200 bg-gray-50 aspect-video">
-              {isPDF(item.path ?? item.name) ? (
+              {isDocument(item.path ?? item.name) ? (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs gap-1">
-                  <span className="text-2xl">📄</span>
+                  <span className="text-2xl">{getDocIcon(item.path ?? item.name)}</span>
                   <span className="text-center px-1 truncate w-full text-center">
                     {item.name ?? item.path?.split("/").pop()}
                   </span>
@@ -98,13 +107,13 @@ export default function DeckUploader({ existingFiles = [], onChange }) {
       >
         <Upload size={20} />
         <span className="text-sm font-medium">Upload slides</span>
-        <span className="text-xs">PNG, JPG, WebP or PDF · Max 5 MB each</span>
+        <span className="text-xs">PNG, JPG, WebP, PDF, PPT or PPTX · Max 20 MB each</span>
       </button>
       <input
         ref={inputRef}
         type="file"
         multiple
-        accept="image/jpeg,image/png,image/webp,application/pdf"
+        accept="image/jpeg,image/png,image/webp,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,.ppt,.pptx"
         className="hidden"
         onChange={handleAdd}
       />
