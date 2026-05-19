@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
+import { cancelCollab } from '../../api/collabs';
 import { initials } from '../../lib/format';
 import { Check, Loader2, MessageSquare, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -8,6 +9,8 @@ import { toast } from 'sonner';
 export default function CollabInbox() {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [cancellingId, setCancellingId] = useState(null);
+  const [confirmId, setConfirmId] = useState(null);
 
   const loadRequests = async () => {
     setIsLoading(true);
@@ -35,6 +38,22 @@ export default function CollabInbox() {
     }
   };
 
+  const handleCancel = async (id) => {
+    setCancellingId(id);
+    try {
+      await cancelCollab(id);
+      toast.success('Collaboration cancelled.');
+      setRequests((current) => current.map((item) =>
+        item.id === id ? { ...item, status: 'cancelled' } : item
+      ));
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cancel. Please try again.');
+    } finally {
+      setCancellingId(null);
+      setConfirmId(null);
+    }
+  };
+
   const getStatusStyle = (status) => {
     switch (status) {
       case 'accepted':
@@ -43,6 +62,8 @@ export default function CollabInbox() {
         return 'bg-yellow-500/10 text-yellow-600';
       case 'rejected':
         return 'bg-red-500/10 text-red-600';
+      case 'cancelled':
+        return 'bg-gray-500/10 text-gray-500';
       default:
         return 'bg-black/5 text-gray-500';
     }
@@ -101,6 +122,38 @@ export default function CollabInbox() {
                     >
                       <X className="h-3.5 w-3.5" /> Reject
                     </button>
+                  </>
+                )}
+                {request.status === 'accepted' && (
+                  <>
+                    {confirmId === request.id ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-gray-500">Sure?</span>
+                        <button
+                          type="button"
+                          onClick={() => handleCancel(request.id)}
+                          disabled={cancellingId === request.id}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-red-500 hover:bg-red-600 px-3 py-2 text-xs font-bold text-white transition-colors disabled:opacity-50"
+                        >
+                          {cancellingId === request.id ? 'Cancelling...' : 'Yes, Cancel'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmId(null)}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F4F4] border border-black/5 hover:bg-black/5 px-3 py-2 text-xs font-bold text-gray-700 transition-all"
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setConfirmId(request.id)}
+                        className="inline-flex items-center gap-2 rounded-full bg-red-500/10 border border-red-200 hover:bg-red-500/20 px-4 py-2 text-xs font-bold text-red-600 transition-colors"
+                      >
+                        <X className="h-3.5 w-3.5" /> Cancel Collab
+                      </button>
+                    )}
                   </>
                 )}
                 <Link

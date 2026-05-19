@@ -71,4 +71,9 @@ class CollaborationRequest extends Model
     {
         return $this->status === 'expired';
     }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
 }

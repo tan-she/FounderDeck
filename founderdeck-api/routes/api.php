@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:entrepreneur');
     Route::delete('/collab/{collabRequest}', [CollabController::class, 'withdraw'])
         ->middleware('role:investor');
+    Route::patch('/collab/{collabRequest}/cancel', [CollabController::class, 'cancel']);
 
     // ── Messages ────────────────────────────────────────────
     Route::get('/messages/conversations', [MessageController::class, 'conversations']);

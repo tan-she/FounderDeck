@@ -223,4 +223,48 @@ class CollabController extends Controller
 
         return response()->json(['message' => 'Collaboration request withdrawn.']);
     }
+
+    /**
+     * Cancel an accepted collaboration.
+     * Either sender (investor) or receiver (entrepreneur) may cancel.
+     */
+    public function cancel(CollaborationRequest $collabRequest): JsonResponse
+    {
+        $this->authorize('cancel', $collabRequest);
+
+        $collabRequest->update([
+            'status' => 'cancelled',
+            'responded_at' => now(),
+        ]);
+
+        $collabRequest->load(['post', 'sender', 'receiver']);
+
+        $user = request()->user();
+        $otherUserId = $collabRequest->sender_id === $user->id
+            ? $collabRequest->receiver_id
+            : $collabRequest->sender_id;
+
+        Notification::create([
+            'user_id' => $otherUserId,
+            'type' => 'collab_cancelled',
+            'data' => [
+                'collab_id' => $collabRequest->id,
+                'post_title' => $collabRequest->post->title,
+                'cancelled_by' => $user->name,
+            ],
+        ]);
+
+        broadcast(new CollabStatusChanged(
+            $otherUserId,
+            'cancelled',
+            $collabRequest->id,
+            $collabRequest->post->title,
+            $user->name
+        ));
+
+        return response()->json([
+            'message' => 'Collaboration cancelled successfully.',
+            'data' => new CollabRequestResource($collabRequest),
+        ]);
+    }
 }

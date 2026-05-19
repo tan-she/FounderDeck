@@ -18,8 +18,15 @@ class CollabStatusChanged implements ShouldBroadcast
     public function __construct(string $investor_id, string $status, string $collab_id, string $post_title, string $entrepreneur_name)
     {
         $this->investor_id = $investor_id;
+
+        $typeMap = [
+            'accepted' => 'collab_accepted',
+            'rejected' => 'collab_rejected',
+            'cancelled' => 'collab_cancelled',
+        ];
+
         $this->payload = [
-            'type' => $status === 'accepted' ? 'collab_accepted' : 'collab_rejected',
+            'type' => $typeMap[$status] ?? 'collab_' . $status,
             'collab_id' => $collab_id,
             'post_title' => $post_title,
             'entrepreneur_name' => $entrepreneur_name,

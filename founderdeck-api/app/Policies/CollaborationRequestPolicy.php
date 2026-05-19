@@ -32,4 +32,14 @@ class CollaborationRequestPolicy
             && $user->isInvestor()
             && $collabRequest->isPending();
     }
+
+    /**
+     * Either the sender (investor) or receiver (entrepreneur) can cancel
+     * an accepted collaboration request.
+     */
+    public function cancel(User $user, CollaborationRequest $collabRequest): bool
+    {
+        return ($user->id === $collabRequest->sender_id || $user->id === $collabRequest->receiver_id)
+            && $collabRequest->isAccepted();
+    }
 }

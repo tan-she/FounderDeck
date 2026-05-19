@@ -95,13 +95,16 @@ class MessageController extends Controller
         $receiver = User::findOrFail($userId);
 
         // Only allow messaging if a collaboration request is accepted
-        $collab = \App\Models\CollaborationRequest::where(function ($q) use ($request, $receiver) {
-            $q->where('investor_id', $request->user()->id)
-              ->whereHas('post', fn($p) => $p->where('user_id', $receiver->id));
-        })->orWhere(function ($q) use ($request, $receiver) {
-            $q->where('investor_id', $receiver->id)
-              ->whereHas('post', fn($p) => $p->where('user_id', $request->user()->id));
-        })->where('status', 'accepted')->first();
+        $collab = \App\Models\CollaborationRequest::where('status', 'accepted')
+            ->where(function ($q) use ($request, $receiver) {
+                $q->where(function ($inner) use ($request, $receiver) {
+                    $inner->where('sender_id', $request->user()->id)
+                          ->where('receiver_id', $receiver->id);
+                })->orWhere(function ($inner) use ($request, $receiver) {
+                    $inner->where('sender_id', $receiver->id)
+                          ->where('receiver_id', $request->user()->id);
+                });
+            })->first();
 
         if (!$collab) {
             return response()->json(['message' => 'You can only message users after a collaboration request is accepted.'], 403);
