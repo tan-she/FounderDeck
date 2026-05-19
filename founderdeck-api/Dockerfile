@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -10,7 +10,8 @@ RUN apk add --no-cache \
     zip \
     unzip \
     curl \
-    supervisor
+    supervisor \
+    dcron
 
 # Install PHP extensions
 RUN docker-php-ext-install \
@@ -29,27 +30,29 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy composer files first (for caching)
+# Copy composer files first (for layer caching)
 COPY composer.json composer.lock ./
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Copy rest of the app
+# Copy full app
 COPY . .
 
 # Run post-install scripts
-RUN composer run-script post-autoload-dump
+RUN composer run-script post-autoload-dump || true
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
     && chmod -R 755 /var/www/bootstrap/cache
 
-# Copy nginx config
-COPY docker/nginx.conf /etc/nginx/nginx.conf
+# Add Laravel cron job
+RUN echo "* * * * * www-data php /var/www/artisan schedule:run >> /var/log/cron.log 2>&1" \
+    > /etc/crontabs/www-data
 
-# Copy supervisor config
+# Copy config files
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8000
