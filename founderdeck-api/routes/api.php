@@ -25,9 +25,13 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:5,1'); // 5 attempts per minute per IP
 
-    Route::get('/google/redirect', [AuthController::class, 'googleRedirect']);
-    Route::get('/google/callback', [AuthController::class, 'googleCallback']);
-    Route::post('/google/finalize', [AuthController::class, 'finalizeGoogleAuth']);
+    // ── Google OAuth (public — no auth middleware) ───────────────────────
+    // Step 1: React calls this → redirects browser to Google consent screen
+    Route::get('/google', [AuthController::class, 'redirectToGoogle']);
+    Route::get('/google/redirect', [AuthController::class, 'redirectToGoogle']); // alias for compatibility
+    // Step 2: Google redirects here after user approves
+    // Must match EXACTLY: https://founderdeck-api.onrender.com/api/auth/google/callback
+    Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
