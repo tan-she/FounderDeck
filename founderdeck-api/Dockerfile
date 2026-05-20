@@ -55,6 +55,11 @@ RUN echo "* * * * * www-data php /var/www/artisan schedule:run >> /var/log/cron.
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Clear all cached config so env variables are always fresh
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
+RUN php artisan route:clear || true
+
 EXPOSE 8000
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
